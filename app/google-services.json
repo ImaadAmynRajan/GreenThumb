@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "319166027740",
+    "firebase_url": "https://green-thumb-97764.firebaseio.com",
+    "project_id": "green-thumb-97764",
+    "storage_bucket": "green-thumb-97764.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319166027740:android:5f412bc4fa6fcf47c36119",
+        "android_client_info": {
+          "package_name": "com.example.greenthumb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "319166027740-en8dipg1c3jachn36kdvcjqei7lu15rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDysnW2cdXtXBHrHPedPqu2oiJvWsE0gZg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "319166027740-en8dipg1c3jachn36kdvcjqei7lu15rg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
