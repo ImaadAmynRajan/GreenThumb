@@ -1,5 +1,7 @@
 package com.example.greenthumb;
 
+import com.google.firebase.quickstart.database.java.models.User;
+
 import java.util.Date;
 
 public class Task {
