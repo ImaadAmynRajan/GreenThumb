@@ -2,7 +2,6 @@ package com.example.greenthumb;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,24 +21,10 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        final String TAG = "MainActivity";
-//
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//
-//        //how to call database
-//        /* FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference myRef = database.getReference("message"); */
-//
-//
-//    }
-
     EditText email, password;
     Button login_button;
     TextView signUp_textView;
-    private FirebaseAuth mAuth;
+    FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener fireBase_Listener;
 
     @Override
@@ -90,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
-                                        Log.d(null, "signInWithEmail:success");
+
                                         FirebaseUser user = mAuth.getCurrentUser();
-                                        Toast.makeText(MainActivity.this, Objects.requireNonNull(task.getException()).getMessage(),
+                                        Toast.makeText(MainActivity.this, "successful login",
                                                 Toast.LENGTH_SHORT).show();
                                         Intent homepage = new Intent(MainActivity.this, HomePage.class);
                                         startActivity(homepage);

@@ -51,9 +51,8 @@ public class SignUp extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
-                                        Log.d(null, "signUpWithEmail:success");
                                         FirebaseUser user = mAuth.getCurrentUser();
-                                        Toast.makeText(SignUp.this, Objects.requireNonNull(task.getException()).getMessage(),
+                                        Toast.makeText(SignUp.this, "successful signUp",
                                                 Toast.LENGTH_SHORT).show();
                                         Intent homepage = new Intent(SignUp.this, HomePage.class);
                                         startActivity(homepage);

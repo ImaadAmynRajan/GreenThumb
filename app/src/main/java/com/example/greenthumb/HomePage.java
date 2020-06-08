@@ -11,8 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class HomePage extends AppCompatActivity {
     Button logout_button;
-    FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener authStateListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
