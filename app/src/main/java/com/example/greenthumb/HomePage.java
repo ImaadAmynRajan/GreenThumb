@@ -18,6 +18,8 @@ public class HomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         logout_button = findViewById(R.id.logout_button);
+
+        //this is onclick method for button to log out of the app
         logout_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

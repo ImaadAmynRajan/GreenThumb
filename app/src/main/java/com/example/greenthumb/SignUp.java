@@ -36,7 +36,9 @@ public class SignUp extends AppCompatActivity {
         login_TextView = findViewById(R.id.login_TextView);
         signUp_button = findViewById(R.id.signUp_button);
 
+    // this is onclick listener with method to create user in firebase
         signUp_button.setOnClickListener(new View.OnClickListener() {
+            // this method checks if the user is already existing or not, where user is not already existing and email is in correct format a user is created.
             @Override
             public void onClick(View v) {
                 String email = signUpEmail.getText().toString();
@@ -72,7 +74,7 @@ public class SignUp extends AppCompatActivity {
 
             }
         });
-
+        // this is onclick listener for taking user to login page
         login_TextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

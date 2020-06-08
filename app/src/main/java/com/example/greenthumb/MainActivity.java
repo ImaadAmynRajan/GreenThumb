@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         fireBase_Listener = new FirebaseAuth.AuthStateListener() {
 
+            //this method checks for if the user is already signed in into the app.
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser list_of_User = mAuth.getCurrentUser();
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-
+        // this on-click listener checks for user inputs in both email field and password.
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if ((!email.getText().toString().isEmpty()) && (!password.getText().toString().isEmpty())) {
                     mAuth.signInWithEmailAndPassword(user_Email, user_Password)
                             .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                                //this method will authenticate with the firebase server on user credentials.
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
+        // this is onclick listener for taking user to signUp page
         signUp_textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
+        // this is onclick listener for taking user to forgot password page.
         forgot_password_TextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,13 +127,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-
-        mAuth.addAuthStateListener(fireBase_Listener);
-    }
 
 
 }

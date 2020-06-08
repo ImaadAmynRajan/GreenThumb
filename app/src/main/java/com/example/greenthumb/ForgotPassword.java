@@ -28,6 +28,8 @@ public class ForgotPassword extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         resetEmail = findViewById(R.id.resetEmail);
         editTextResetEmailAddress2 = findViewById(R.id.editTextResetEmailAddress2);
+        // this is reset email button's onclick listener. it checks if the email is associated with existing users. if the it is not or email is in bad format respective error is displayed to user.
+
         resetEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,6 +38,7 @@ public class ForgotPassword extends AppCompatActivity {
                     Toast.makeText(ForgotPassword.this, "please enter email address", Toast.LENGTH_LONG).show();
 
                 } else if (!(editTextResetEmailAddress2.getText().toString().isEmpty())) {
+                    //this is where the app is communicating with firebase to confirm user's email's existence in the app.
                     mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
