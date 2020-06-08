@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     EditText email, password;
     Button login_button;
-    TextView signUp_textView;
+    TextView signUp_textView, forgot_password_TextView;
     FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener fireBase_Listener;
 
@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         password = findViewById(R.id.Password);
         login_button = findViewById(R.id.login_button);
         signUp_textView = findViewById(R.id.signUp_textView);
+        forgot_password_TextView = findViewById(R.id.forgot_password_TextView);
 
         fireBase_Listener = new FirebaseAuth.AuthStateListener() {
 
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser list_of_User = mAuth.getCurrentUser();
                 if (list_of_User != null) {
-                    Toast.makeText(MainActivity.this, "your logged in", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "successful login", Toast.LENGTH_SHORT).show();
                     Intent homepage = new Intent(MainActivity.this, HomePage.class);
                     startActivity(homepage);
                 } else {
@@ -111,8 +112,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        forgot_password_TextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent forgotPassword = new Intent(MainActivity.this, ForgotPassword.class);
+                startActivity(forgotPassword);
+
+            }
+        });
+
 
     }
+
 
     @Override
     public void onStart() {
