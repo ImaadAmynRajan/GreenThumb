@@ -3,13 +3,22 @@
     <string name="tasks">Tasks</string>
 
     <!-- Task titles -->
-    <string name="seasonal_task">Install and maintain seasonal plants</string>
-    <string name="fertilize_task">Mow, trim and fertilize green spaces</string>
-    <string name="weed_task">Mulch, edge and weed gardens</string>
-    <string name="trim_task">Prune and trim trees and bushes</string>
-    <string name="equipment_task">Maintain all gardening equipment and machinery, like mowers, trimmers and leaf blowers</string>
-    <string name="health_task">Monitor and maintain the health of plants</string>
-    <string name="pest_task">Deal with pest problems that could damage plants</string>
-    <string name="clean_task">Keep gardens and green spaces clear of debris and litter</string>
+    <string-array name="task_titles">
+        <item>Select task</item>
+        <item>Install and maintain seasonal plants</item>
+        <item>Mow, trim and fertilize green spaces</item>
+        <item>Mulch, edge and weed gardens</item>
+        <item>Prune and trim trees and bushes</item>
+        <item>Maintain all gardening equipment and machinery</item>
+        <item>Monitor and maintain the health of plants</item>
+        <item>Deal with pest problems that could damage plants</item>
+        <item>Keep gardens and green spaces clear of debris and litter</item>
+    </string-array>
+
+    <string-array name="task_assignees">
+        <item>Select assignee</item>
+    </string-array>
+
     <string name="title_activity_view_tasks">ViewTasks</string>
+    <string name="set_due_date_button">Set Due Date</string>
 </resources>
