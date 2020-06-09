@@ -43,30 +43,35 @@ public class SignUp extends AppCompatActivity {
             public void onClick(View v) {
                 String email = signUpEmail.getText().toString();
                 String password = signUpPassword.getText().toString();
+                passwordValidator pv = new passwordValidator(password);
                 if (email.isEmpty() || password.isEmpty()) {
                     Log.d(null, "signUpWithEmail:please enter both email and password");
 
                 } else if (!(signUpEmail.getText().toString().isEmpty()) && !(signUpPassword.getText().toString().isEmpty())) {
-                    mAuth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        FirebaseUser user = mAuth.getCurrentUser();
-                                        Toast.makeText(SignUp.this, "successful signUp",
-                                                Toast.LENGTH_SHORT).show();
-                                        Intent homepage = new Intent(SignUp.this, HomePage.class);
-                                        startActivity(homepage);
+                    if (pv.validate()) {
+                        mAuth.createUserWithEmailAndPassword(email, password)
+                                .addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            Toast.makeText(SignUp.this, "successful signUp",
+                                                    Toast.LENGTH_SHORT).show();
+                                            Intent homepage = new Intent(SignUp.this, HomePage.class);
+                                            startActivity(homepage);
 
-                                    } else {
-                                        Toast.makeText(SignUp.this, Objects.requireNonNull(task.getException()).getMessage(),
-                                                Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(SignUp.this, Objects.requireNonNull(task.getException()).getMessage(),
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+
                                     }
 
-                                }
-
-                            });
+                                });
+                    } else {
+                        Toast.makeText(SignUp.this, "Invalid Password, doesn't match the requirements.", Toast.LENGTH_LONG).show();
+                    }
 
 
                 }
