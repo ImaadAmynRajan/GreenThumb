@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class TestAssignTasks {
     @Test
     public void assignTaskTest() {
-        Task task = new Task("test title", new Date(3333), null);
+        Task task = new Task("fdfd-fdfd","test title", new Date(3333), null);
         // assert the task doesn't have an assignee yet
         assertNull(task.getAssigneeId());
         assertNull(task.getAssigneeLabel());

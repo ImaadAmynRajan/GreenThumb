@@ -46,7 +46,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         String title = task.getTitle();
         String dueDate = task.getDueDate() == null ? "None" : task.getDateString();
-        String assignee = task.getAssignee() == null ? "No one" : task.getAssignee().toString();
+        String assignee = task.getAssigneeLabel() == null ? "No one" : task.getAssigneeLabel();
 
         holder.title.setText(title);
         holder.dueDate.setText("Due date: " + dueDate);

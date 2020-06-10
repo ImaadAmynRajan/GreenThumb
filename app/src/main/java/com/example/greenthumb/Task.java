@@ -5,11 +5,14 @@ import java.util.Date;
 
 public class Task {
     private String title;
+    String id;
     private Date dueDate;
     private String assigneeId;
     private String assigneeLabel;
 
-    public Task(String title, Date dueDate, User user) {
+    public Task() { }
+    public Task(String id, String title, Date dueDate, User user) {
+        this.id = id;
         this.title = title;
         this.dueDate = dueDate;
         setAssignee(user);
@@ -39,6 +42,12 @@ public class Task {
     public String getAssigneeId() { return this.assigneeId; }
 
     public void setAssignee(User user) {
-
+        if (user != null) {
+            this.assigneeLabel = user.getEmail();
+            this.assigneeId = user.getId();
+        } else {
+            this.assigneeId = null;
+            this.assigneeLabel = null;
+        }
     }
 }
