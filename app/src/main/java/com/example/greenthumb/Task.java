@@ -1,17 +1,18 @@
 package com.example.greenthumb;
 import java.text.DateFormat;
-import com.google.firebase.quickstart.database.java.models.User;
+
 import java.util.Date;
 
 public class Task {
     private String title;
     private Date dueDate;
-    private Object assignee;
+    private String assigneeId;
+    private String assigneeLabel;
 
-    public Task(String title, Date dueDate, Object assignee) {
+    public Task(String title, Date dueDate, User user) {
         this.title = title;
         this.dueDate = dueDate;
-        this.assignee = assignee;
+        setAssignee(user);
     }
 
     public String getTitle() {
@@ -32,11 +33,12 @@ public class Task {
         return dateFormat.format(this.dueDate);
     }
 
-    public Object getAssignee() {
-        return this.assignee;
+    public String getAssigneeLabel() {
+        return this.assigneeLabel;
     }
+    public String getAssigneeId() { return this.assigneeId; }
 
-    public void writeToDatabase() {
+    public void setAssignee(User user) {
 
     }
 }

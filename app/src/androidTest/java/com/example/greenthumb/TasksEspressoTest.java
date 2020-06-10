@@ -65,7 +65,7 @@ public class TasksEspressoTest {
         onView(withText("OK")).perform(click());
 
         // verify preview text
-        onView(withId(R.id.editTextDatePreview)).check(matches(withText("Jan. 1, 1970")));
+        onView(withId(R.id.editTextDatePreview)).check(matches(withText("Jan 1, 1970")));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class TasksEspressoTest {
 
         // check that there exists a task with the specified data
         onView(withText("Install and maintain seasonal plants")).check(matches(isDisplayed()));
-        onView(withText("Due date: Jan. 1, 1970")).check(matches(isDisplayed()));
+        onView(withText("Due date: Jan 1, 1970")).check(matches(isDisplayed()));
         onView(withText("Assigned to: No one")).check(matches(isDisplayed()));
     }
 }
