@@ -1,5 +1,6 @@
 package com.example.greenthumb;
 
+import android.os.SystemClock;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.widget.DatePicker;
@@ -33,6 +34,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 public class TasksEspressoTest {
 
@@ -98,5 +100,23 @@ public class TasksEspressoTest {
         onView(withText("Install and maintain seasonal plants")).check(matches(isDisplayed()));
         onView(withText("Due date: Jan 1, 1970")).check(matches(isDisplayed()));
         onView(withText("Assigned to: No one")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    // checks that the assign user spinner is visible to users, and allows you to pick a user
+    public void assignUserVisible() throws InterruptedException {
+        // this allows for the users to load because the app is too fast otherwise
+        SystemClock.sleep(2000);
+        onView(withId(R.id.addTaskButton))
+                .perform(click());
+
+        // select user from dropdown
+        // code snippet from https://stackoverflow.com/questions/39457305/android-testing-waited-for-the-root-of-the-view-hierarchy-to-have-window-focus
+        onView(withId(R.id.spinnerAssignee)).perform(click());
+        onData(anything()).inRoot(RootMatchers.isPlatformPopup()).atPosition(1).perform(click());
+
+        // we won't know which user is there, but we can check that "Select Assignee" wasn't selected
+        // meaning we successfully selected a user
+        onView(withId(R.id.spinnerAssignee)).check(matches(not(withText("Select Assignee"))));
     }
 }
