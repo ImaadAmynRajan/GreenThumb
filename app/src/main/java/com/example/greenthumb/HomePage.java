@@ -12,7 +12,10 @@ import com.google.firebase.auth.FirebaseAuth;
 public class HomePage extends AppCompatActivity {
     Button logout_button;
 
-
+    /***
+     * This method displays the homepage contents
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +24,10 @@ public class HomePage extends AppCompatActivity {
 
         //this is onclick method for button to log out of the app
         logout_button.setOnClickListener(new View.OnClickListener() {
+            /***
+             * This method logs out user when the logout button is pressed.
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
