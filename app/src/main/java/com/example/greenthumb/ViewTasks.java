@@ -29,6 +29,7 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
     private RecyclerView.LayoutManager taskLayoutManager;
 
     private ArrayList<Task> tasks;
+    public static ArrayList<User> users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +44,12 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
             }
         });
 
-        // populate task list
+        // init task list and user list
         this.tasks = new ArrayList<>();
+        users = new ArrayList<>();
+        // collect all the users and tasks we have in our database
         getTasks();
+        getUsers();
 
         // initialize RecyclerView
         this.taskRecyclerView = findViewById(R.id.recyclerViewTasks);
@@ -65,47 +69,17 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
 
     /*
     This function retrieves all the tasks from the data base.
-    One it takes a snapshot of the database, it cycles through all the objects
-    and creates tasks out of their information.
-    It then sends that data collectTasks function
+    Once it takes a snapshot of the database,
+    it  sends them to the collectTasks function where they are turned into task objects
+    Reference: https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
      */
     private void getTasks() {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("tasks");
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<Task> tasks = new ArrayList<>();
-                for (DataSnapshot dp: dataSnapshot.getChildren()) {
-                    Map<String, Object> info = (Map<String, Object>) dp.getValue();
-                    String assigneeLabel, assigneeId;
-                    Date date;
-
-                    // set all our values
-                    String title = (String) info.get("title");
-                    String id = (String) dp.getKey();
-
-                    if (info.get("date") != null) {
-                        date = new Date((Long) info.get("date"));
-                    } else {
-                        date = null;
-                    }
-
-                    if (info.get("assigneeId") != null) {
-                        assigneeId = (String) info.get("assigneeId");
-                    } else {
-                        assigneeId = null;
-                    }
-
-                    if (info.get("assigneeLabel") != null) {
-                        assigneeLabel = (String) info.get("assigneeLabel");
-                    } else {
-                        assigneeLabel = null;
-                    }
-
-                    tasks.add(new Task(id, title, date, new User(assigneeId, assigneeLabel)));
-                }
                 // send our tasks to be added to our recycle viewer
-                collectTasks(tasks);
+                collectTasks(dataSnapshot);
             }
 
             @Override
@@ -117,13 +91,75 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
 
     /*
     This method is called after we have retrieved our tasks from the database
-    It will take in the list of tasks and set it equal to the classes tasks
-    After it has done that we notify the task adapter that changes have occurred so
-    The view will update and show the tasks
+    It will cycle through the tasks and create task objects out of them
+    Reference: https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
      */
-    private void collectTasks(ArrayList<Task> tasks) {
-        this.tasks = tasks;
+    private void collectTasks(DataSnapshot dataSnapshot) {
+        for (DataSnapshot dp: dataSnapshot.getChildren()) {
+            Map<String, Object> info = (Map<String, Object>) dp.getValue();
+            String assigneeLabel, assigneeId;
+            Date date;
+
+            // set all our values
+            String title = (String) info.get("title");
+            String id = (String) dp.getKey();
+
+            if (info.get("date") != null) {
+                date = new Date((Long) info.get("date"));
+            } else {
+                date = null;
+            }
+
+            if (info.get("assigneeId") != null) {
+                assigneeId = (String) info.get("assigneeId");
+            } else {
+                assigneeId = null;
+            }
+
+            if (info.get("assigneeLabel") != null) {
+                assigneeLabel = (String) info.get("assigneeLabel");
+            } else {
+                assigneeLabel = null;
+            }
+
+            this.tasks.add(new Task(id, title, date, new User(assigneeId, assigneeLabel)));
+        }
         this.taskAdapter.notifyDataSetChanged();
+    }
+
+    /*
+    This function gets a list of users that we have in our database
+    We need this list of users so we can assign tasks to users
+    Reference https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
+     */
+    private void getUsers() {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("users");
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // send the users to be turned into User objects
+                collectUsers(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /*
+    This function is used as the callback for getUsers
+    This allows us to assign our list of users to our class variable after they have
+    been retrieved
+    Reference https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
+     */
+    private void collectUsers(DataSnapshot dataSnapshot) {
+        for (DataSnapshot dp: dataSnapshot.getChildren()) {
+            String id = dp.getKey();
+            String email = (String) dp.getValue();
+            users.add(new User(id, email));
+        }
     }
 
     @Override

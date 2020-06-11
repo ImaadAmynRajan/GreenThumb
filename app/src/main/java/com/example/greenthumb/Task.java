@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Task {
     private String title;
-    String id;
+    private String id;
     private Date dueDate;
     private String assigneeId;
     private String assigneeLabel;
@@ -16,6 +16,10 @@ public class Task {
         this.title = title;
         this.dueDate = dueDate;
         setAssignee(user);
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getTitle() {
