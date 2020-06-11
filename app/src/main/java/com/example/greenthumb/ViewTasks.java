@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -114,8 +115,8 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
             String title = (String) info.get("title");
             String id = (String) dp.getKey();
 
-            if (info.get("date") != null) {
-                date = new Date((Long) info.get("date"));
+            if (info.get("dueDate") != null) {
+                date = new Date((Long) info.get("dueDate"));
             } else {
                 date = null;
             }

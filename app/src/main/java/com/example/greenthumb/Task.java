@@ -9,7 +9,7 @@ import java.util.Date;
 public class Task {
     private String title;
     private String id;
-    private Date dueDate;
+    private Long dueDate;
     private String assigneeId;
     private String assigneeLabel;
 
@@ -24,7 +24,8 @@ public class Task {
     public Task(String id, String title, Date dueDate, User user) {
         this.id = id;
         this.title = title;
-        this.dueDate = dueDate;
+        // storing it as a long allows for easier database reference
+        this.dueDate = dueDate.getTime();
         setAssignee(user);
     }
 
@@ -46,9 +47,9 @@ public class Task {
 
     /**
      * Gets the due date of a task
-     * @return the due date of a task
+     * @return the due date of a task in milliseconds
      */
-    public Date getDueDate() {
+    public Long getDueDate() {
         return this.dueDate;
     }
 
