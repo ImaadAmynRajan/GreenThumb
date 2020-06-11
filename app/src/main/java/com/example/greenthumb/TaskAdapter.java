@@ -71,8 +71,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     /**
      * Configures text for a task item layout in the RecyclerView
-     * @param holder
-     * @param position
+     * @param holder the holder represents a task in the view
+     * @param position the position in the arraylist of that holder
      */
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, final int position) {
@@ -124,8 +124,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 // update the db entry
                 db.child(task.getId()).setValue(task);
 
-                // notify changes
-                notifyChanges();
+                // notify the class that there has been changes and we need to update the UI
+                TaskAdapter.this.notifyDataSetChanged();
             }
         });
     }
@@ -137,9 +137,5 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @Override
     public int getItemCount() {
         return this.tasks.size();
-    }
-
-    private void notifyChanges() {
-        this.notifyDataSetChanged();
     }
 }

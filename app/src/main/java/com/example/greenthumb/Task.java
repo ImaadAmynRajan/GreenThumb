@@ -22,11 +22,16 @@ public class Task {
      * @param user the user to which the task is assigned
      */
     public Task(String id, String title, Date dueDate, User user) {
+        this.id = id;
         this.title = title;
         this.dueDate = dueDate;
         setAssignee(user);
     }
 
+    /**
+     * The id corresponding to the database entry
+     * @return the id of the task
+     */
     public String getId() {
         return id;
     }
