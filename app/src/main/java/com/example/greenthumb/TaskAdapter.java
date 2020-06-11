@@ -1,4 +1,3 @@
-// Adapter code based on https://www.youtube.com/watch?v=17NbUcEts9c (accessed June 7, 2020)
 package com.example.greenthumb;
 
 import android.view.LayoutInflater;
@@ -11,14 +10,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * Represents an Adapter that configures task items in a ViewHolder
+ * Adapter code based on https://www.youtube.com/watch?v=17NbUcEts9c (accessed June 7, 2020)
+ */
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private ArrayList<Task> tasks;
 
+    /**
+     * Represents a ViewHolder that contains tasks
+     */
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         private TextView title;
         private TextView dueDate;
         private TextView assignee;
 
+        /**
+         * Creates a ViewHolder to store task items
+         * @param itemView the layout for a task item
+         */
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -28,10 +38,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         }
     }
 
+    /**
+     * Creates a TaskAdapter containing a list of tasks
+     * @param tasks an ArrayList of tasks
+     */
     public TaskAdapter(ArrayList<Task> tasks) {
         this.tasks = tasks;
     }
 
+    /**
+     * Initializes a ViewHolder for task items
+     * @param parent
+     * @param viewType
+     * @return initialized task item ViewHolder
+     */
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,6 +60,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return taskViewHolder;
     }
 
+    /**
+     * Configures text for a task item layout in the RecyclerView
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task task = this.tasks.get(position);
@@ -53,6 +78,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.assignee.setText("Assigned to: " + assignee);
     }
 
+    /**
+     * Gets the number of tasks in the RecyclerView
+     * @return number of tasks in the RecyclerView
+     */
     @Override
     public int getItemCount() {
         return this.tasks.size();
