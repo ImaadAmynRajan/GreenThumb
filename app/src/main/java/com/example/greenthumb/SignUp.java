@@ -26,6 +26,10 @@ public class SignUp extends AppCompatActivity {
     TextView login_TextView; // takes to login page when clicked
     private FirebaseAuth mAuth;
 
+    /***
+     * This method displays the content of the screen when the activity is started.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,9 +40,15 @@ public class SignUp extends AppCompatActivity {
         login_TextView = findViewById(R.id.login_TextView);
         signUp_button = findViewById(R.id.signUp_button);
 
-    // this is onclick listener with method to create user in firebase
+        // this is onclick listener with method to create user in firebase
         signUp_button.setOnClickListener(new View.OnClickListener() {
             // this method checks if the user is already existing or not, where user is not already existing and email is in correct format a user is created.
+
+            /***
+             * This method starts Firebase communication by taking in user email and password.
+             * if the email and password are not empty and in valid format account is created in firebase authentication system.
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 String email = signUpEmail.getText().toString();
@@ -51,6 +61,11 @@ public class SignUp extends AppCompatActivity {
                     if (pv.validate()) {
                         mAuth.createUserWithEmailAndPassword(email, password)
                                 .addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
+                                    /***
+                                     * This method displays result of the firebase communication to the user. when user is successfully signed up they are displayed home screen,
+                                     * otherwise they are displayed what is the error like email already existing.
+                                     * @param task: contains result of authentication from firebase.
+                                     */
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
@@ -80,6 +95,10 @@ public class SignUp extends AppCompatActivity {
         });
         // this is onclick listener for taking user to login page
         login_TextView.setOnClickListener(new View.OnClickListener() {
+            /***
+             * This method takes user to login page.
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 Intent login_Page = new Intent(SignUp.this, MainActivity.class);

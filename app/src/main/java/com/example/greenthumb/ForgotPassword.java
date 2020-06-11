@@ -21,6 +21,10 @@ public class ForgotPassword extends AppCompatActivity {
     EditText editTextResetEmailAddress2;
     FirebaseAuth mAuth;
 
+    /***
+     * This method creates and shows content of the forgot password page.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +35,10 @@ public class ForgotPassword extends AppCompatActivity {
         // this is reset email button's onclick listener. it checks if the email is associated with existing users. if the it is not or email is in bad format respective error is displayed to user.
 
         resetEmail.setOnClickListener(new View.OnClickListener() {
+            /***
+             * This method starts firebase communication to reset user password
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 String email = editTextResetEmailAddress2.getText().toString();
@@ -40,6 +48,10 @@ public class ForgotPassword extends AppCompatActivity {
                 } else if (!(editTextResetEmailAddress2.getText().toString().isEmpty())) {
                     //this is where the app is communicating with firebase to confirm user's email's existence in the app.
                     mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        /***
+                         *This method displays the result of communication with firebase.
+                         * @param task
+                         */
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {

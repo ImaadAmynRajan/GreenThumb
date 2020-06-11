@@ -19,6 +19,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
+/***
+ * This class represents the First activity/page a user sees when they open application without having logged in previously.
+ */
+
 public class MainActivity extends AppCompatActivity {
 
     EditText email, password;
@@ -27,6 +31,11 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener fireBase_Listener;
 
+    /***
+     *
+     * This method shows the screen that opens when user opens the app.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         final String TAG = "MainActivity";
@@ -46,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
         fireBase_Listener = new FirebaseAuth.AuthStateListener() {
 
             //this method checks for if the user is already signed in into the app.
+
+            /***
+             * This method checks if the user was already logged in when they closed app previously.
+             * @param firebaseAuth : Firebase object communicates with firebase backend to verify if the user already had logged in.
+             *
+             */
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser list_of_User = mAuth.getCurrentUser();
@@ -61,6 +76,12 @@ public class MainActivity extends AppCompatActivity {
 
         // this on-click listener checks for user inputs in both email field and password.
         login_button.setOnClickListener(new View.OnClickListener() {
+            /***
+             *This onclick method takes in the user input data from email and password fields. if the fields were not empty the data of those fields would be checked against the firebase Authentication system
+             * that checks the user credentials. once credentials are found and verified the user is given access to home screen
+             * @param v
+             *
+             */
             @Override
             public void onClick(View v) {
                 String user_Email = email.getText().toString();
@@ -73,6 +94,11 @@ public class MainActivity extends AppCompatActivity {
                     mAuth.signInWithEmailAndPassword(user_Email, user_Password)
                             .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                 //this method will authenticate with the firebase server on user credentials.
+
+                                /***
+                                 * This method displays the result of firebase communication where credentials were checked. if the credentials were correct the user would be allowed access.
+                                 * @param task
+                                 */
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
@@ -95,6 +121,10 @@ public class MainActivity extends AppCompatActivity {
         });
         // this is onclick listener for taking user to signUp page
         signUp_textView.setOnClickListener(new View.OnClickListener() {
+            /***
+             * This method takes user to sign up page were they can create an account.
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 Intent signUp = new Intent(MainActivity.this, SignUp.class);
@@ -104,6 +134,10 @@ public class MainActivity extends AppCompatActivity {
         });
         // this is onclick listener for taking user to forgot password page.
         forgot_password_TextView.setOnClickListener(new View.OnClickListener() {
+            /***
+             * This method takes user to forgot password page of the app where they can reset their password
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 Intent forgotPassword = new Intent(MainActivity.this, ForgotPassword.class);
@@ -114,8 +148,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-
 
 
 }

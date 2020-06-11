@@ -17,12 +17,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * Represents the activity in which user's can view and add tasks
+ * RecyclerView code based on https://www.youtube.com/watch?v=17NbUcEts9c (accessed June 7, 2020)
+ */
 public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTaskDialogListener {
     private RecyclerView taskRecyclerView;
     private RecyclerView.Adapter taskAdapter;
@@ -31,6 +33,10 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
     private ArrayList<Task> tasks;
     public static ArrayList<User> users;
 
+    /**
+     * Initializes the ViewTasks activity. Populates RecyclerView of tasks.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,16 +68,19 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
         this.taskRecyclerView.setLayoutManager(this.taskLayoutManager);
     }
 
+    /**
+     * Creates and shows an instance of AddTaskDialog
+     */
     private void openNewTaskDialog() {
         AddTaskDialog addTaskDialog = new AddTaskDialog();
         addTaskDialog.show(getSupportFragmentManager(), "add new task");
     }
 
-    /*
-    This function retrieves all the tasks from the data base.
-    Once it takes a snapshot of the database,
-    it  sends them to the collectTasks function where they are turned into task objects
-    Reference: https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
+    /**
+    * This function retrieves all the tasks from the data base.
+    * Once it takes a snapshot of the database,
+    * it  sends them to the collectTasks function where they are turned into task objects
+    * Reference: https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
      */
     private void getTasks() {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("tasks");
@@ -89,10 +98,11 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
         });
     }
 
-    /*
-    This method is called after we have retrieved our tasks from the database
-    It will cycle through the tasks and create task objects out of them
-    Reference: https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
+    /**
+    * This method is called after we have retrieved our tasks from the database
+    * It will cycle through the tasks and create task objects out of them
+    * Reference: https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
+    * @param dataSnapshot A snapshot of the tasks branch of the database
      */
     private void collectTasks(DataSnapshot dataSnapshot) {
         for (DataSnapshot dp: dataSnapshot.getChildren()) {
@@ -127,10 +137,10 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
         this.taskAdapter.notifyDataSetChanged();
     }
 
-    /*
-    This function gets a list of users that we have in our database
-    We need this list of users so we can assign tasks to users
-    Reference https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
+    /**
+    * This function gets a list of users that we have in our database
+    * We need this list of users so we can assign tasks to users
+    * Reference https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
      */
     private void getUsers() {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("users");
@@ -148,11 +158,12 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
         });
     }
 
-    /*
-    This function is used as the callback for getUsers
-    This allows us to assign our list of users to our class variable after they have
-    been retrieved
-    Reference https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
+    /**
+    * This function is used as the callback for getUsers
+    * This allows us to assign our list of users to our class variable after they have
+    * been retrieved
+    * Reference https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
+    * @param dataSnapshot A snap shot of the users branch of the database
      */
     private void collectUsers(DataSnapshot dataSnapshot) {
         for (DataSnapshot dp: dataSnapshot.getChildren()) {
@@ -162,6 +173,12 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
         }
     }
 
+    /**
+     * Adds a task to the app's database and ArrayList of tasks
+     * @param title description of the task
+     * @param dueDate date by which the task must be completed
+     * @param assignee user to which the task has been assigned
+     */
     @Override
     public void addTask(String title, Date dueDate, Object assignee) {
         // get our database reference to the tasks branch

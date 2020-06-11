@@ -1,7 +1,3 @@
-/**
- * Code for building a dialog in Android based on https://www.youtube.com/watch?v=ARezg1D9Zd0 (accessed 29 May, 2020)
- * Code for dynamically updating spinner items based on https://mkyong.com/android/android-spinner-drop-down-list-example/ (accessed 29 May, 2020)
- */
 package com.example.greenthumb;
 
 import android.app.AlertDialog;
@@ -27,6 +23,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Represents the UI that users use to add new tasks.
+ * Code for building a dialog in Android based on https://www.youtube.com/watch?v=ARezg1D9Zd0 (accessed 29 May, 2020)
+ */
 public class AddTaskDialog extends AppCompatDialogFragment {
     private Spinner spinnerTaskTitle;
     private Spinner spinnerAssignee;
@@ -38,6 +38,11 @@ public class AddTaskDialog extends AppCompatDialogFragment {
 
     private AddTaskDialogListener listener;
 
+    /**
+     * Initializes AddTaskDialog. Sets onClick events.
+     * @param savedInstanceState
+     * @return the configured AddTaskDialog
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -114,6 +119,10 @@ public class AddTaskDialog extends AppCompatDialogFragment {
         }
     }
 
+    /**
+     * Returns true only if a task title has been selected
+     * @return a boolean indicating whether the input is valid
+     */
     private boolean verifyInput() {
         return !taskTitle.equals("Select task");
     }
@@ -144,7 +153,16 @@ public class AddTaskDialog extends AppCompatDialogFragment {
         return null;
     }
 
+    /**
+     * Interface for activities to interact with the dialog for adding tasks
+     */
     public interface AddTaskDialogListener {
+        /**
+         * Adds a task to the app's database and ArrayList of tasks
+         * @param title description of the task
+         * @param dueDate date by which the task must be completed
+         * @param assignee user to which the task has been assigned
+         */
         void addTask(String title, Date dueDate, Object assignee);
     }
 }
