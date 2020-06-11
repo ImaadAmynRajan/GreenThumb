@@ -168,9 +168,10 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
      */
     private void collectUsers(DataSnapshot dataSnapshot) {
         for (DataSnapshot dp: dataSnapshot.getChildren()) {
-            String id = dp.getKey();
-            String email = (String) dp.getValue();
-            users.add(new User(id, email));
+            User newUser = dp.getValue(User.class);
+            /*String id = dp.getKey();
+            String email = (String) dp.getValue();*/
+            users.add(newUser);
         }
     }
 

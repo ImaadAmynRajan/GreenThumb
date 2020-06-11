@@ -25,7 +25,7 @@ public class Task {
         this.id = id;
         this.title = title;
         // storing it as a long allows for easier database reference
-        this.dueDate = dueDate.getTime();
+        this.dueDate = dueDate != null ? dueDate.getTime() : null;
         setAssignee(user);
     }
 
