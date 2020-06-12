@@ -60,7 +60,6 @@ public class ForgotPassword extends AppCompatActivity {
                                 startActivity(backToHomePage);
                             } else {
                                 Toast.makeText(ForgotPassword.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
-
                             }
                         }
                     });

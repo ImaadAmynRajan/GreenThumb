@@ -11,11 +11,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ForgotPassword" />
         <activity android:name=".SignUp" />
-        <activity android:name=".HomePage" />
         <activity
             android:name=".ViewTasks"
-            android:label="@string/title_activity_view_tasks"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_view_tasks" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

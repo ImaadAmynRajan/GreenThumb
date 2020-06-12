@@ -66,11 +66,10 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser list_of_User = mAuth.getCurrentUser();
                 if (list_of_User != null) {
                     Toast.makeText(MainActivity.this, "successful login", Toast.LENGTH_SHORT).show();
-                    Intent homepage = new Intent(MainActivity.this, HomePage.class);
-                    startActivity(homepage);
+                    Intent viewTasks = new Intent(MainActivity.this, ViewTasks.class);
+                    startActivity(viewTasks);
                 } else {
                     Toast.makeText(MainActivity.this, "Please login", Toast.LENGTH_SHORT).show();
-
                 }
             }
         };
@@ -107,26 +106,17 @@ public class MainActivity extends AppCompatActivity {
 
                                         Toast.makeText(MainActivity.this, "successful login",
                                                 Toast.LENGTH_SHORT).show();
-                                        Intent homepage = new Intent(MainActivity.this, HomePage.class);
-                                        startActivity(homepage);
+                                        Intent viewTasks = new Intent(MainActivity.this, ViewTasks.class);
+                                        startActivity(viewTasks);
 
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Toast.makeText(MainActivity.this, Objects.requireNonNull(task.getException()).getMessage(),
                                                 Toast.LENGTH_SHORT).show();
-
                                     }
-
-                                    // ...
-
-
                                 }
                             });
-
-
                 }
-
-
             }
         });
         // this is onclick listener for taking user to signUp page

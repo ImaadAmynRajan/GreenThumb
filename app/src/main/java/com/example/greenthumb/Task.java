@@ -1,6 +1,6 @@
 package com.example.greenthumb;
 import java.text.DateFormat;
-import com.google.firebase.quickstart.database.java.models.User;
+
 import java.util.Date;
 
 /**
@@ -8,19 +8,33 @@ import java.util.Date;
  */
 public class Task {
     private String title;
-    private Date dueDate;
-    private Object assignee;
+    private String id;
+    private Long dueDate;
+    private String assigneeId;
+    private String assigneeLabel;
 
+    public Task() { }
     /**
      * Creates a new Task
+     * @param id the ID associated with the task
      * @param title description of the task
      * @param dueDate the date by which the task must be completed
-     * @param assignee the user to which the task is assigned
+     * @param user the user to which the task is assigned
      */
-    public Task(String title, Date dueDate, Object assignee) {
+    public Task(String id, String title, Date dueDate, User user) {
+        this.id = id;
         this.title = title;
-        this.dueDate = dueDate;
-        this.assignee = assignee;
+        // storing it as a long allows for easier database reference
+        this.dueDate = dueDate != null ? dueDate.getTime() : null;
+        setAssignee(user);
+    }
+
+    /**
+     * The id corresponding to the database entry
+     * @return the id of the task
+     */
+    public String getId() {
+        return id;
     }
 
     /**
@@ -33,9 +47,9 @@ public class Task {
 
     /**
      * Gets the due date of a task
-     * @return the due date of a task
+     * @return the due date of a task in milliseconds
      */
-    public Date getDueDate() {
+    public Long getDueDate() {
         return this.dueDate;
     }
 
@@ -55,16 +69,25 @@ public class Task {
 
     /**
      * Gets the user assigned to a task
-     * @return the user assigned to a task
+     * @return the user's label assigned to a task
      */
-    public Object getAssignee() {
-        return this.assignee;
+    public String getAssigneeLabel() {
+        return this.assigneeLabel;
     }
 
     /**
-     * Stores a task in the database
+     * Gets the user assigned to a task
+     * @return the user's id assigned to a task
      */
-    public void writeToDatabase() {
+    public String getAssigneeId() { return this.assigneeId; }
 
+    public void setAssignee(User user) {
+        if (user != null) {
+            this.assigneeLabel = user.getEmail();
+            this.assigneeId = user.getId();
+        } else {
+            this.assigneeId = null;
+            this.assigneeLabel = null;
+        }
     }
 }

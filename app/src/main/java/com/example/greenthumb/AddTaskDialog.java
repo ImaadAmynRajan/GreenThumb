@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -16,8 +17,11 @@ import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Represents the UI that users use to add new tasks.
@@ -69,7 +73,7 @@ public class AddTaskDialog extends AppCompatDialogFragment {
 
         spinnerTaskTitle = view.findViewById(R.id.spinnerTaskTitle);
         spinnerAssignee = view.findViewById(R.id.spinnerAssignee);
-        //loadAssigneeOptions();
+        loadAssigneeOptions(R.layout.support_simple_spinner_dropdown_item);
 
         editTextDatePreview = view.findViewById(R.id.editTextDatePreview);
         buttonDate = view.findViewById(R.id.buttonDate);
@@ -123,13 +127,29 @@ public class AddTaskDialog extends AppCompatDialogFragment {
         return !taskTitle.equals("Select task");
     }
 
-    // gets assignee options from database and adds them to assignee spinner
-    private void loadAssigneeOptions() {
-
+    /*
+    This will load the assignee option into a spinner that the user can select from
+    Reference https://stackoverflow.com/questions/41809942/how-to-programatically-set-entries-of-spinner-in-android
+     */
+    private void loadAssigneeOptions(int spinner) {
+        String [] userLabels = new String[ViewTasks.users.size() + 1];
+        userLabels[0] = "Select Assignee";
+        for (int i = 0; i < ViewTasks.users.size(); i++) {
+            userLabels[i + 1] = ViewTasks.users.get(i).getEmail();
+        }
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this.getContext(), spinner, userLabels);
+        this.spinnerAssignee.setAdapter(spinnerArrayAdapter);
     }
 
     // gets User based on spinner selection
     private Object getAssigneeSelection() {
+        String assignee = this.spinnerAssignee.getSelectedItem().toString();
+        // now find it in our user array
+        for (User u : ViewTasks.users) {
+            if (u.getEmail().equals(assignee)) {
+                return u;
+            }
+        }
         return null;
     }
 
