@@ -42,7 +42,7 @@ public class SignUpEspressoTest {
         closeSoftKeyboard();
         onView(withId(R.id.signUp_button))
                 .perform(click());
-        intended(hasComponent(HomePageActivity.class.getName()));
+        intended(hasComponent(HomePage.class.getName()));
         /* delete user so that the email does not need to be changed for each run
          * code snippet from https://firebase.google.com/docs/auth/android/manage-users#delete_a_user
          */

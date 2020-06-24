@@ -48,7 +48,7 @@ public class LoginEspressoTest {
         /* use of intended based on https://developer.android.com/training/testing/espresso/cheat-sheet
          * https://developer.android.com/reference/androidx/test/espresso/intent/matcher/IntentMatchers#hascomponent
          */
-        intended(hasComponent(HomePageActivity.class.getName()));
+        intended(hasComponent(HomePage.class.getName()));
     }
 
 }

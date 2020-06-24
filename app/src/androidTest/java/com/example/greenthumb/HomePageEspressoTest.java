@@ -19,8 +19,8 @@ import static org.hamcrest.Matchers.not;
 public class HomePageEspressoTest {
 
     @Rule
-    public ActivityScenarioRule<HomePageActivity> activityScenarioRule
-            = new ActivityScenarioRule<>(HomePageActivity.class);
+    public ActivityScenarioRule<HomePage> activityScenarioRule
+            = new ActivityScenarioRule<>(HomePage.class);
 
     @Test
     public void verifyNavigationDisplayed() {
