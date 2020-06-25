@@ -8,4 +8,16 @@
     tools:context=".ViewTasks"
     tools:showIn="@layout/activity_view_tasks">
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/mainNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        app:itemIconTint="@android:color/white"
+        app:itemTextColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/main_nav_items" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
