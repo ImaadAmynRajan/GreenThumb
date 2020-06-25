@@ -8,12 +8,15 @@ import android.widget.DatePicker;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -24,6 +27,8 @@ import static androidx.test.espresso.action.ViewActions.pressKey;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
@@ -41,6 +46,12 @@ public class TasksEspressoTest {
     @Rule
     public ActivityScenarioRule<ViewTasks> activityScenarioRule
             = new ActivityScenarioRule<>(ViewTasks.class);
+
+    @Before
+    public void initIntents() { Intents.init(); }
+
+    @After
+    public void releaseIntents() { Intents.release(); }
 
     // checks that the "Add Task" dialog contains four views
     @Test
@@ -118,5 +129,24 @@ public class TasksEspressoTest {
         // we won't know which user is there, but we can check that "Select Assignee" wasn't selected
         // meaning we successfully selected a user
         onView(withId(R.id.spinnerAssignee)).check(matches(not(withText("Select Assignee"))));
+    }
+
+    @Test
+    //check that navigation bar is present
+    public void verifyNavigationDisplayed() {
+        onView(withId(R.id.mainNav))
+                .check(matches(isDisplayed()));
+        onView(withId(R.id.toHomePage))
+                .check(matches(isDisplayed()));
+        onView(withId(R.id.toTaskPage))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    //check that navigation bar can take user from Tasks -> Home Page
+    public void testReturnHome() {
+        onView(withId(R.id.toHomePage))
+                .perform(click());
+        intended(hasComponent(HomePage.class.getName()));
     }
 }
