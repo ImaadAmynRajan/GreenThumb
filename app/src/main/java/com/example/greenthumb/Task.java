@@ -108,7 +108,7 @@ public class Task {
 
     /**
      * Gets a boolean value representing whether the task has been marked as finished
-     * @return
+     * @return boolean value representing whether the task has been marked as finished
      */
     public boolean isFinished() {
         return isFinished;
