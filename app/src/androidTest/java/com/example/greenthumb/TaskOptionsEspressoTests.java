@@ -33,6 +33,9 @@ public class TaskOptionsEspressoTests {
         // create task
         onView(withId(R.id.addTaskButton)).perform(click());
 
+        // wait for Add Task dialog
+        SystemClock.sleep(1000);
+
         // select title from dropdown
         onView(withId(R.id.spinnerTaskTitle)).perform(click());
         onData(anything()).inRoot(RootMatchers.isPlatformPopup()).atPosition(1).perform(click());
