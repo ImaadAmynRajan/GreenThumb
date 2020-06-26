@@ -167,6 +167,23 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                                     TaskAdapter.this.notifyDataSetChanged();
                                 }
                                 break;
+                            case R.id.deleteButton:
+                                // set up our database reference to the tasks branch
+                                DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("tasks");
+
+                                // select the current task
+                                Task task = TaskAdapter.this.tasks.get(position);
+
+                                // remove task from our task list
+                                TaskAdapter.this.tasks.remove(task);
+
+                                // remove task from the database
+                                db.child(task.getId()).removeValue();
+
+                                // notify the class that there has been changes and we need to update the UI
+                                TaskAdapter.this.notifyDataSetChanged();
+
+                                break;
                             default:
                                 return false;
                         }
