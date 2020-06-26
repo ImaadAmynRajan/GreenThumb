@@ -97,9 +97,14 @@ public class TaskOptionsEspressoTests {
         onView(withText(R.string.mark_as_done)).check(matches(not(isClickable())));
     }
 
-    // ensure that a task shows that it has been marked done after a user clicks 'Mark As Done'
+    // ensure that a task shows that it has been marked done only after a user clicks 'Mark As Done'
     @Test
     public void testTaskDoneConfirmation() {
+        // check that the newest task does not display "Done" and a checkmark
+        onView(new RecyclerViewMatcher(R.id.recyclerViewTasks).atPosition(0))
+                .check(matches(allOf(hasDescendant(allOf(withText("Done"), not(isDisplayed()))),
+                        hasDescendant(allOf(withId(R.id.checkmark), not(isDisplayed()))))));
+
         // click options button
         onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
                 actionOnItemAtPosition(0, CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
@@ -112,7 +117,7 @@ public class TaskOptionsEspressoTests {
 
         // check that the newest task displays "Done" and a checkmark
         onView(new RecyclerViewMatcher(R.id.recyclerViewTasks).atPosition(0))
-                .check(matches(allOf(hasDescendant(withText("Done")),
+                .check(matches(allOf(hasDescendant(allOf(withText("Done"), isDisplayed())),
                         hasDescendant(allOf(withId(R.id.checkmark), isDisplayed())))));
     }
 }
