@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -36,6 +37,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         private TextView dueDate;
         private TextView assignee;
         private ImageButton options;
+        private TextView doneText;
+        private ImageView checkmark;
 
         /**
          * Creates a ViewHolder to store task items
@@ -48,6 +51,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             this.dueDate = itemView.findViewById(R.id.textViewTaskDueDate);
             this.assignee = itemView.findViewById(R.id.textViewTaskAssignee);
             this.options = itemView.findViewById(R.id.taskOptions);
+            this.doneText = itemView.findViewById(R.id.textViewDone);
+            this.checkmark = itemView.findViewById(R.id.checkmark);
         }
     }
 
@@ -92,6 +97,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         // set the assignee text
         String assignee = task.getAssigneeId() == null ? "No one" : task.getAssigneeLabel();
         holder.assignee.setText("Assigned to: " + assignee);
+
+        // make done indicators visible only if task is marked as done
+        holder.doneText.setVisibility(task.isFinished() ? View.VISIBLE : View.INVISIBLE);
+        holder.checkmark.setVisibility(task.isFinished() ? View.VISIBLE : View.INVISIBLE);
 
         // configure options menu
         // popup menu code based on https://www.javatpoint.com/android-popup-menu-example#:~:text=%E2%86%92%20%E2%86%90%20prev-,Android%20Popup%20Menu%20Example,The%20android. (accessed June 26, 2020)
