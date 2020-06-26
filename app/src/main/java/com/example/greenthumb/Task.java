@@ -13,6 +13,8 @@ public class Task {
     private String assigneeId;
     private String assigneeLabel;
 
+    private boolean isFinished = false;
+
     public Task() { }
     /**
      * Creates a new Task
@@ -27,6 +29,19 @@ public class Task {
         // storing it as a long allows for easier database reference
         this.dueDate = dueDate != null ? dueDate.getTime() : null;
         setAssignee(user);
+    }
+
+    /**
+     * Creates a new Task
+     * @param id the ID associated with the task
+     * @param title description of the task
+     * @param dueDate the date by which the task must be completed
+     * @param user the user to which the task is assigned
+     * @param isFinished whether the task has been marked as finished
+     */
+    public Task(String id, String title, Date dueDate, User user, boolean isFinished) {
+        this(id, title, dueDate, user);
+        this.isFinished = isFinished;
     }
 
     /**
@@ -89,5 +104,20 @@ public class Task {
             this.assigneeId = null;
             this.assigneeLabel = null;
         }
+    }
+
+    /**
+     * Gets a boolean value representing whether the task has been marked as finished
+     * @return
+     */
+    public boolean isFinished() {
+        return isFinished;
+    }
+
+    /**
+     * Marks a task as finished
+     */
+    public void markAsFinished() {
+        this.isFinished = true;
     }
 }
