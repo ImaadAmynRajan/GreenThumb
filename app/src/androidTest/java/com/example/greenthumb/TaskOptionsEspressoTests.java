@@ -13,12 +13,14 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.not;
 
 public class TaskOptionsEspressoTests {
 
@@ -52,5 +54,42 @@ public class TaskOptionsEspressoTests {
         // assert options are visible and enabled
         onView(withText(R.string.claim)).check(matches(allOf(isEnabled(), isDisplayed())));
         onView(withText(R.string.mark_as_done)).check(matches(allOf(isEnabled(), isDisplayed())));
+    }
+
+    // ensure that menu options are disabled after they are selected
+    @Test
+    public void testOptionsDisabled() {
+        // click options button
+        onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
+                actionOnItemAtPosition(0, CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+
+        // wait for menu items to appear
+        SystemClock.sleep(1000);
+
+        // click Claim button
+        onView(withText(R.string.claim)).perform(click());
+
+        // click options button
+        onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
+                actionOnItemAtPosition(0, CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+
+        // wait for menu items to appear
+        SystemClock.sleep(1000);
+
+        // assert Claim button is disabled
+        onView(withText(R.string.claim)).check(matches(not(isClickable())));
+
+        // click Mark As Done button
+        onView(withText(R.string.mark_as_done)).perform(click());
+
+        // click options button
+        onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
+                actionOnItemAtPosition(0, CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+
+        // wait for menu items to appear
+        SystemClock.sleep(1000);
+
+        // assert Claim button is disabled
+        onView(withText(R.string.mark_as_done)).check(matches(not(isClickable())));
     }
 }
