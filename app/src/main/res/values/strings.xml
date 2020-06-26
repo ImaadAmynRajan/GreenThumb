@@ -21,4 +21,7 @@
 
     <string name="title_activity_view_tasks">ViewTasks</string>
     <string name="set_due_date_button">Set Due Date</string>
+
+    <string name="claim">Claim</string>
+    <string name="mark_as_done">Mark As Done</string>
 </resources>
