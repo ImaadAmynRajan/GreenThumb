@@ -13,6 +13,7 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
@@ -94,5 +95,24 @@ public class TaskOptionsEspressoTests {
 
         // assert Claim button is disabled
         onView(withText(R.string.mark_as_done)).check(matches(not(isClickable())));
+    }
+
+    // ensure that a task shows that it has been marked done after a user clicks 'Mark As Done'
+    @Test
+    public void testTaskDoneConfirmation() {
+        // click options button
+        onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
+                actionOnItemAtPosition(0, CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+
+        // wait for menu items to appear
+        SystemClock.sleep(1000);
+
+        // click Mark As Done button
+        onView(withText(R.string.mark_as_done)).perform(click());
+
+        // check that the newest task displays "Done" and a checkmark
+        onView(new RecyclerViewMatcher(R.id.recyclerViewTasks).atPosition(0))
+                .check(matches(allOf(hasDescendant(withText("Done")),
+                        hasDescendant(allOf(withId(R.id.checkmark), isDisplayed())))));
     }
 }
