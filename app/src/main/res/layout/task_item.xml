@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- CardView code from https://www.youtube.com/watch?v=Nw9JF55LDzE (accessed June 7, 2020) -->
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="4dp">
@@ -33,26 +34,32 @@
             android:padding="4dp"
             android:text="Assignee" />
 
-        <Button
-            android:id="@+id/claimButton"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="43dp"
-            android:layout_marginRight="17dp"
-            android:text="Claim"
-            android:visibility="invisible" />
-
-        <TextView
-            android:id="@+id/claimedText"
+        <!-- code from https://stackoverflow.com/questions/31765395/whats-the-name-of-the-little-widget-with-three-dots-inside-a-cardview-in-androi (accessed June 25, 2020) -->
+        <ImageButton
+            android:id="@+id/taskOptions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            style="?android:attr/actionOverflowButtonStyle"
+            android:layout_alignParentRight="true"/>
+
+        <ImageView
+            android:id="@+id/checkmark"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/textViewTaskDueDate"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="53dp"
-            android:layout_marginRight="30dp"
-            android:text="Claimed" />
+            android:visibility="invisible"
+            app:srcCompat="@drawable/heavy_check_mark" />
+
+        <TextView
+            android:id="@+id/textViewDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewTaskDueDate"
+            android:layout_toLeftOf="@id/checkmark"
+            android:padding="4dp"
+            android:visibility="invisible"
+            android:text="Done" />
 
     </RelativeLayout>
 

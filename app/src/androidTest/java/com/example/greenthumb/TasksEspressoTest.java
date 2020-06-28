@@ -14,17 +14,20 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressKey;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -32,15 +35,34 @@ import static androidx.test.espresso.matcher.ViewMatchers.withInputType;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertTrue;
 
 public class TasksEspressoTest {
+    private final String testEmail = "ben.kelly@dal.ca";
+    private final String testPassword = "Test1234";
 
     @Rule
-    public ActivityScenarioRule<ViewTasks> activityScenarioRule
-            = new ActivityScenarioRule<>(ViewTasks.class);
+    public ActivityScenarioRule<MainActivity> activityScenarioRule
+            = new ActivityScenarioRule<>(MainActivity.class);
+
+    @Before
+    public void login() {
+        // enter test credentials
+        onView(withId(R.id.Email)).perform(click()).perform(typeText(testEmail)).perform(closeSoftKeyboard());
+        onView(withId(R.id.Password)).perform(click()).perform(typeText(testPassword)).perform(closeSoftKeyboard());
+
+        // login
+        onView(withId(R.id.login_button)).perform(click());
+
+        // wait for ViewTasks page to load
+        SystemClock.sleep(2000);
+    }
 
     // checks that the "Add Task" dialog contains four views
     @Test
@@ -73,7 +95,7 @@ public class TasksEspressoTest {
         onView(withText("OK")).perform(click());
 
         // verify preview text
-        onView(withId(R.id.editTextDatePreview)).check(matches(withText("Jan 1, 1970")));
+        onView(withId(R.id.editTextDatePreview)).check(matches(withText("Jan. 1, 1970")));
     }
 
     @Test
@@ -83,8 +105,9 @@ public class TasksEspressoTest {
                 .perform(click());
 
         // select title from dropdown
-        // code snippet from https://stackoverflow.com/questions/39457305/android-testing-waited-for-the-root-of-the-view-hierarchy-to-have-window-focus
         onView(withId(R.id.spinnerTaskTitle)).perform(click());
+
+        // code snippet from https://stackoverflow.com/questions/39457305/android-testing-waited-for-the-root-of-the-view-hierarchy-to-have-window-focus
         onData(anything()).inRoot(RootMatchers.isPlatformPopup()).atPosition(1).perform(click());
 
         // select date
@@ -96,23 +119,26 @@ public class TasksEspressoTest {
         // submit data
         onView(withText("Add")).perform(click());
 
-        // check that there exists a task with the specified data
-        onView(withText("Install and maintain seasonal plants")).check(matches(isDisplayed()));
-        onView(withText("Due date: Jan 1, 1970")).check(matches(isDisplayed()));
-        onView(withText("Assigned to: No one")).check(matches(isDisplayed()));
+        // check that the newest task contains the specified data
+        onView(new RecyclerViewMatcher(R.id.recyclerViewTasks).atPosition(0))
+                .check(matches(allOf(hasDescendant(withText("Install and maintain seasonal plants")),
+                        hasDescendant(withText("Due date: Jan. 1, 1970")),
+                        hasDescendant(withText("Assigned to: No one")))));
     }
 
     @Test
     // checks that the assign user spinner is visible to users, and allows you to pick a user
     public void assignUserVisible() throws InterruptedException {
-        // this allows for the users to load because the app is too fast otherwise
-        SystemClock.sleep(2000);
         onView(withId(R.id.addTaskButton))
                 .perform(click());
 
         // select user from dropdown
         // code snippet from https://stackoverflow.com/questions/39457305/android-testing-waited-for-the-root-of-the-view-hierarchy-to-have-window-focus
         onView(withId(R.id.spinnerAssignee)).perform(click());
+
+        // this allows for the users to load because the app is too fast otherwise
+        SystemClock.sleep(2000);
+
         onData(anything()).inRoot(RootMatchers.isPlatformPopup()).atPosition(1).perform(click());
 
         // we won't know which user is there, but we can check that "Select Assignee" wasn't selected

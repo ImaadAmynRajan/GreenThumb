@@ -110,6 +110,7 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
             Map<String, Object> info = (Map<String, Object>) dp.getValue();
             String assigneeLabel, assigneeId;
             Date date;
+            boolean isFinished;
 
             // set all our values
             String title = (String) info.get("title");
@@ -133,7 +134,13 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
                 assigneeLabel = null;
             }
 
-            this.tasks.add(new Task(id, title, date, new User(assigneeId, assigneeLabel)));
+            if (info.get("finished") != null) {
+                isFinished = (boolean) info.get("finished");
+            } else {
+                isFinished = false;
+            }
+
+            this.tasks.add(new Task(id, title, date, new User(assigneeId, assigneeLabel), isFinished));
         }
         this.taskAdapter.notifyDataSetChanged();
     }
@@ -194,7 +201,7 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
         db.child(id).setValue(newTask);
 
         // add task to ViewTasks screen
-        this.tasks.add(newTask);
+        this.tasks.add(0, newTask);
         this.taskAdapter.notifyDataSetChanged();
     }
 }
