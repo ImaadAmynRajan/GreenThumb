@@ -31,6 +31,9 @@ public class TaskOptionsEspressoTests {
 
     @Before
     public void setUp() {
+        // wait for UI
+        SystemClock.sleep(1000);
+
         // create task
         onView(withId(R.id.addTaskButton)).perform(click());
 
@@ -58,6 +61,9 @@ public class TaskOptionsEspressoTests {
         // assert options are visible and enabled
         onView(withText(R.string.claim)).check(matches(allOf(isEnabled(), isDisplayed())));
         onView(withText(R.string.mark_as_done)).check(matches(allOf(isEnabled(), isDisplayed())));
+
+        // delete the task
+        onView(withText(R.string.delete)).perform(click());
     }
 
     // ensure that menu options are disabled after they are selected
@@ -95,6 +101,9 @@ public class TaskOptionsEspressoTests {
 
         // assert Claim button is disabled
         onView(withText(R.string.mark_as_done)).check(matches(not(isClickable())));
+
+        // delete the task
+        onView(withText(R.string.delete)).perform(click());
     }
 
     // ensure that a task shows that it has been marked done only after a user clicks 'Mark As Done'
@@ -119,5 +128,15 @@ public class TaskOptionsEspressoTests {
         onView(new RecyclerViewMatcher(R.id.recyclerViewTasks).atPosition(0))
                 .check(matches(allOf(hasDescendant(allOf(withText("Done"), isDisplayed())),
                         hasDescendant(allOf(withId(R.id.checkmark), isDisplayed())))));
+
+        // click options button
+        onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
+                actionOnItemAtPosition(0, CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+
+        // wait for menu items to appear
+        SystemClock.sleep(1000);
+
+        // delete the task
+        onView(withText(R.string.delete)).perform(click());
     }
 }

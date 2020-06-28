@@ -145,4 +145,57 @@ public class TasksEspressoTest {
         // meaning we successfully selected a user
         onView(withId(R.id.spinnerAssignee)).check(matches(not(withText("Select Assignee"))));
     }
+
+    @Test
+    // checks that a task is removed from the RecyclerView after a user clicks Delete
+    public void testDeleteTask() {
+        onView(withId(R.id.addTaskButton))
+                .perform(click());
+
+        // select title from dropdown
+        onView(withId(R.id.spinnerTaskTitle)).perform(click());
+
+        // code snippet from https://stackoverflow.com/questions/39457305/android-testing-waited-for-the-root-of-the-view-hierarchy-to-have-window-focus
+        onData(anything()).inRoot(RootMatchers.isPlatformPopup()).atPosition(1).perform(click());
+
+        // submit data
+        onView(withText("Add")).perform(click());
+
+        // get number of tasks
+        int numberOfTasks = getChildCountOfViewWithId(R.id.recyclerViewTasks);
+
+        // click options button
+        onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
+                actionOnItemAtPosition(0, CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+
+        // wait for menu items to appear
+        SystemClock.sleep(1000);
+
+        // click Delete button
+        onView(withText(R.string.delete)).perform(click());
+
+        // assert that there is now one less task in the RecyclerView
+        onView(withId(R.id.recyclerViewTasks)).check(matches(hasChildCount(numberOfTasks - 1)));
+    }
+
+    /**
+     * Returns the number of child views contained within a view
+     * @param id id of the parent view
+     * @return the number of child views contained within the view
+     */
+    private int getChildCountOfViewWithId(int id) {
+        int count = 0;
+
+        // try matching the view with an incrementing number of child views
+        while (count < 10000) {
+            try {
+                onView(withId(id)).check(matches(hasChildCount(count)));
+                return count;
+            } catch (Error failedAssertion) {
+                count++;
+            }
+        }
+
+        return 0;
+    }
 }
