@@ -29,15 +29,13 @@ import java.util.Map;
  * Represents the activity in which user's can view and add tasks
  * RecyclerView code based on https://www.youtube.com/watch?v=17NbUcEts9c (accessed June 7, 2020)
  */
-public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTaskDialogListener {
+public class ViewTasks extends NavigationBar implements AddTaskDialog.AddTaskDialogListener {
     private RecyclerView taskRecyclerView;
     private RecyclerView.Adapter taskAdapter;
     private RecyclerView.LayoutManager taskLayoutManager;
 
     private ArrayList<Task> tasks;
     public static ArrayList<User> users;
-
-    BottomNavigationView navigation;
 
     /**
      * Initializes the ViewTasks activity. Populates RecyclerView of tasks.
@@ -47,6 +45,7 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_tasks);
+        super.onCreateNav();
 
         FloatingActionButton newTaskButton = findViewById(R.id.addTaskButton);
         newTaskButton.setOnClickListener(new View.OnClickListener() {
@@ -73,20 +72,6 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
         this.taskRecyclerView.setAdapter(this.taskAdapter);
         this.taskRecyclerView.setLayoutManager(this.taskLayoutManager);
 
-        //get and handle navigation bar
-        navigation = findViewById(R.id.mainNav);
-        //setOnNavigationItemSelectedListener from https://stackoverflow.com/questions/44611224/how-to-setonnavigationitemlistener-on-bottomnavigationview-in-android-using-kotl
-        navigation.setOnNavigationItemSelectedListener
-                (new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        if (item.getItemId() == R.id.toHomePage) {
-                            Intent homePage = new Intent(ViewTasks.this, HomePage.class);
-                            startActivity(homePage);
-                        }
-                        return false;
-                    }
-                });
     }
 
     /**
