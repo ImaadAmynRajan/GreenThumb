@@ -1,5 +1,7 @@
 package com.example.greenthumb;
 
+import android.os.SystemClock;
+
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
@@ -42,6 +44,7 @@ public class SignUpEspressoTest {
         closeSoftKeyboard();
         onView(withId(R.id.signUp_button))
                 .perform(click());
+        SystemClock.sleep(2000);
         intended(hasComponent(HomePage.class.getName()));
         /* delete user so that the email does not need to be changed for each run
          * code snippet from https://firebase.google.com/docs/auth/android/manage-users#delete_a_user

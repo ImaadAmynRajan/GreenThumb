@@ -1,10 +1,12 @@
 package com.example.greenthumb;
 
+import android.os.SystemClock;
+
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
-import org.junit.Before;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -12,9 +14,9 @@ import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 public class LoginEspressoTest {
 
@@ -45,6 +47,7 @@ public class LoginEspressoTest {
         closeSoftKeyboard();
         onView(withId(R.id.login_button))
                 .perform(click());
+        SystemClock.sleep(2000);
         /* use of intended based on https://developer.android.com/training/testing/espresso/cheat-sheet
          * https://developer.android.com/reference/androidx/test/espresso/intent/matcher/IntentMatchers#hascomponent
          */
