@@ -2,8 +2,10 @@
 
 package com.example.greenthumb;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -16,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.MenuItem;
 import android.view.View;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,6 +36,8 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
 
     private ArrayList<Task> tasks;
     public static ArrayList<User> users;
+
+    BottomNavigationView navigation;
 
     /**
      * Initializes the ViewTasks activity. Populates RecyclerView of tasks.
@@ -67,6 +72,21 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
 
         this.taskRecyclerView.setAdapter(this.taskAdapter);
         this.taskRecyclerView.setLayoutManager(this.taskLayoutManager);
+
+        //get and handle navigation bar
+        navigation = findViewById(R.id.mainNav);
+        //setOnNavigationItemSelectedListener from https://stackoverflow.com/questions/44611224/how-to-setonnavigationitemlistener-on-bottomnavigationview-in-android-using-kotl
+        navigation.setOnNavigationItemSelectedListener
+                (new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        if (item.getItemId() == R.id.toHomePage) {
+                            Intent homePage = new Intent(ViewTasks.this, HomePage.class);
+                            startActivity(homePage);
+                        }
+                        return false;
+                    }
+                });
     }
 
     /**
