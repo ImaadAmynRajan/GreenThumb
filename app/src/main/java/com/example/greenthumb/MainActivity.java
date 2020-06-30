@@ -66,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser list_of_User = mAuth.getCurrentUser();
                 if (list_of_User != null) {
                     Toast.makeText(MainActivity.this, "successful login", Toast.LENGTH_SHORT).show();
-                    Intent viewTasks = new Intent(MainActivity.this, ViewTasks.class);
-                    startActivity(viewTasks);
+                    Intent homePage = new Intent(MainActivity.this, HomePage.class);
+                    startActivity(homePage);
                 } else {
                     Toast.makeText(MainActivity.this, "Please login", Toast.LENGTH_SHORT).show();
                 }
@@ -106,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
 
                                         Toast.makeText(MainActivity.this, "successful login",
                                                 Toast.LENGTH_SHORT).show();
-                                        Intent viewTasks = new Intent(MainActivity.this, ViewTasks.class);
-                                        startActivity(viewTasks);
+                                        Intent homePage = new Intent(MainActivity.this, HomePage.class);
+                                        startActivity(homePage);
 
                                     } else {
                                         // If sign in fails, display a message to the user.

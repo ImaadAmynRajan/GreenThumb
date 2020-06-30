@@ -82,8 +82,8 @@ public class SignUp extends AppCompatActivity {
                                                     Toast.LENGTH_SHORT).show();
 
                                             // launch the view task activity
-                                            Intent viewTasks = new Intent(SignUp.this, ViewTasks.class);
-                                            startActivity(viewTasks);
+                                            Intent homePage = new Intent(SignUp.this, HomePage.class);
+                                            startActivity(homePage);
                                         } else {
                                             Toast.makeText(SignUp.this, Objects.requireNonNull(task.getException()).getMessage(),
                                                     Toast.LENGTH_SHORT).show();

@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_above="@+id/mainNav"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ViewTasks"
     tools:showIn="@layout/activity_view_tasks">
+    <!-- layout_above snippet from https://stackoverflow.com/questions/41199801/recyclerview-covered-by-bottomnavigationview -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
