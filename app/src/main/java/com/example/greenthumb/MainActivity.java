@@ -1,6 +1,12 @@
 package com.example.greenthumb;
 
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,7 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -24,6 +33,7 @@ import java.util.Objects;
  */
 
 public class MainActivity extends AppCompatActivity {
+    public static String NOTIFICATION_ID = "notification-id";
 
     EditText email, password;
     Button login_button;
@@ -42,6 +52,15 @@ public class MainActivity extends AppCompatActivity {
         //how to call database
        /* FirebaseDatabase database = FirebaseDatabase.getInstance();
        DatabaseReference myRef = database.getReference("message"); */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel("notification-id", "Notification", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(notificationChannel);
+            Intent notifs = new Intent(this, NotificationProducer.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notifs, 0);
+            AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -67,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 if (list_of_User != null) {
                     Toast.makeText(MainActivity.this, "successful login", Toast.LENGTH_SHORT).show();
                     Intent viewTasks = new Intent(MainActivity.this, ViewTasks.class);
+                    setAlarm();
                     startActivity(viewTasks);
                 } else {
                     Toast.makeText(MainActivity.this, "Please login", Toast.LENGTH_SHORT).show();
@@ -103,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
-
+                                        setAlarm();
                                         Toast.makeText(MainActivity.this, "successful login",
                                                 Toast.LENGTH_SHORT).show();
                                         Intent viewTasks = new Intent(MainActivity.this, ViewTasks.class);
@@ -149,5 +169,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This function sets an alarm that repeats
+     * It will start a service that checks for overdue tasks and sends notifications to the user if
+     * they have a overdue task
+     */
+    public void setAlarm() {
+        System.out.println("setting alarm");
+        Intent notifs = new Intent(this, NotificationProducer.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notifs, 0);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5000, pendingIntent);
+    }
 
 }
