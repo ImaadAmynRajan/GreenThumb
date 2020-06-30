@@ -2,10 +2,11 @@ package com.example.greenthumb;
 
 import org.junit.Test;
 
+import java.util.Calendar;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestOverdueTasks {
     @Test
@@ -13,11 +14,18 @@ public class TestOverdueTasks {
         Task task = new Task("fdfd-fdfd", "test title", new Date(3333), null);
 
         // should be overdue
-        assertEquals(task.isOverdue, true);
+        assertTrue(task.isOverdue());
+        // mark it as finished
+        task.markAsFinished();
 
-        // set task due date into future
-        task = new Task("test", "test", new Date(100000000), null);
-        // now the task shouldn't be overdue
-        assertEquals(task.isOverdue, false);
+        // now shouldn't be overdue
+        assertFalse(task.isOverdue());
+
+        // make a new task in the future
+        long curDate = Calendar.getInstance().getTimeInMillis();
+        task = new Task("test", "test", new Date(curDate + 1000), null);
+
+        // this task shouldn't be over due
+        assertFalse(task.isOverdue());
     }
 }

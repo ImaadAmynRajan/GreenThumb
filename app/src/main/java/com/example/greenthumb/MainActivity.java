@@ -53,13 +53,10 @@ public class MainActivity extends AppCompatActivity {
        /* FirebaseDatabase database = FirebaseDatabase.getInstance();
        DatabaseReference myRef = database.getReference("message"); */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel("notification-id", "Notification", NotificationManager.IMPORTANCE_DEFAULT);
+            // creating the channel with a name and id, setting the importance to high
+            NotificationChannel notificationChannel = new NotificationChannel("notification-id", "Notification", NotificationManager.IMPORTANCE_HIGH);
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(notificationChannel);
-            Intent notifs = new Intent(this, NotificationProducer.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notifs, 0);
-            AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
         }
 
         super.onCreate(savedInstanceState);
@@ -86,7 +83,10 @@ public class MainActivity extends AppCompatActivity {
                 if (list_of_User != null) {
                     Toast.makeText(MainActivity.this, "successful login", Toast.LENGTH_SHORT).show();
                     Intent viewTasks = new Intent(MainActivity.this, ViewTasks.class);
+
+                    // setting the alarm that will fire once everyday, looking for overdue tasks
                     setAlarm();
+
                     startActivity(viewTasks);
                 } else {
                     Toast.makeText(MainActivity.this, "Please login", Toast.LENGTH_SHORT).show();
@@ -175,10 +175,12 @@ public class MainActivity extends AppCompatActivity {
      * they have a overdue task
      */
     public void setAlarm() {
-        System.out.println("setting alarm");
+        // this is the intent that we want to fire every day
         Intent notifs = new Intent(this, NotificationProducer.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notifs, 0);
+        // create the alarm manager that will handle activating the intent
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        // should fire once everyday
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5000, pendingIntent);
     }
 
