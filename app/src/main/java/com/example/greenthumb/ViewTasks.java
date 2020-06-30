@@ -2,10 +2,13 @@
 
 package com.example.greenthumb;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -13,16 +16,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.MenuItem;
-import android.view.View;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -61,6 +56,7 @@ public class ViewTasks extends NavigationBar implements AddTaskDialog.AddTaskDia
         // collect all the users and tasks we have in our database
         getTasks();
         getUsers();
+
 
         // initialize RecyclerView
         this.taskRecyclerView = findViewById(R.id.recyclerViewTasks);
