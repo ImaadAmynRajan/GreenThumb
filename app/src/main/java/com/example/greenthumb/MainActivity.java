@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
        DatabaseReference myRef = database.getReference("message"); */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // creating the channel with a name and id, setting the importance to high
-            NotificationChannel notificationChannel = new NotificationChannel("notification-id", "Notification", NotificationManager.IMPORTANCE_HIGH);
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_ID, "Notification", NotificationManager.IMPORTANCE_HIGH);
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(notificationChannel);
         }
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         // create the alarm manager that will handle activating the intent
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         // should fire once everyday
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5000, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
 }

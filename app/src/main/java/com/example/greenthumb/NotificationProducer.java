@@ -28,6 +28,7 @@ public class NotificationProducer extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
+        // retrieve tasks, then the function will check for overdue tasks
         getTasks();
     }
 
@@ -56,7 +57,7 @@ public class NotificationProducer extends BroadcastReceiver {
     /**
      * This function retrieves all the tasks from the data base.
      * Once it takes a snapshot of the database,
-     * it sends them to the collectTasks function where they are turned into task objects
+     * it sends them to the checkForOverdue function where they are scanned for overdue tasks
      * Reference: https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
      */
     private void getTasks() {
@@ -65,7 +66,7 @@ public class NotificationProducer extends BroadcastReceiver {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // send our tasks to be added to our recycle viewer
-                collectTasks(dataSnapshot);
+                checkForOverdue(dataSnapshot);
             }
 
             @Override
@@ -82,7 +83,7 @@ public class NotificationProducer extends BroadcastReceiver {
      * Reference: https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
      * @param dataSnapshot A snapshot of the tasks branch of the database
      */
-    private void collectTasks(DataSnapshot dataSnapshot) {
+    private void checkForOverdue(DataSnapshot dataSnapshot) {
         String userId = FirebaseAuth.getInstance().getUid();
         for (DataSnapshot dp: dataSnapshot.getChildren()) {
             Map<String, Object> info = (Map<String, Object>) dp.getValue();
