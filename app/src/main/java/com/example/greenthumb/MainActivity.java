@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
         //how to call database
        /* FirebaseDatabase database = FirebaseDatabase.getInstance();
        DatabaseReference myRef = database.getReference("message"); */
+
+        // notifications require a specific version of android or greater
+        // referenced https://youtu.be/sVdpslsB9qQ
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // creating the channel with a name and id, setting the importance to high
             NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_ID, "Notification", NotificationManager.IMPORTANCE_HIGH);

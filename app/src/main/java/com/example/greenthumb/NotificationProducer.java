@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 
 import androidx.annotation.NonNull;
@@ -71,7 +72,7 @@ public class NotificationProducer extends BroadcastReceiver {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.e("Database Error","There was an error connecting to the database");
             }
         });
     }
