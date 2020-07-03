@@ -46,4 +46,13 @@ public class HomePageEspressoTest {
         intended(hasComponent(ViewTasks.class.getName()));
     }
 
+    @Test
+    public void logout() {
+        onView(withId(R.id.logout_button))
+                .perform(click());
+        intended(hasComponent(MainActivity.class.getName()));
+
+
+    }
+
 }
