@@ -3,6 +3,11 @@
 package com.example.greenthumb;
 
 import android.os.Bundle;
+import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -11,22 +16,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.View;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Represents the activity in which user's can view and add tasks
  * RecyclerView code based on https://www.youtube.com/watch?v=17NbUcEts9c (accessed June 7, 2020)
  */
-public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTaskDialogListener {
+public class ViewTasks extends NavigationBar implements AddTaskDialog.AddTaskDialogListener {
     private RecyclerView taskRecyclerView;
     private RecyclerView.Adapter taskAdapter;
     private RecyclerView.LayoutManager taskLayoutManager;
@@ -42,6 +40,7 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_tasks);
+        super.onCreateNav();
 
         FloatingActionButton newTaskButton = findViewById(R.id.addTaskButton);
         newTaskButton.setOnClickListener(new View.OnClickListener() {
@@ -58,6 +57,7 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
         getTasks();
         getUsers();
 
+
         // initialize RecyclerView
         this.taskRecyclerView = findViewById(R.id.recyclerViewTasks);
         this.taskRecyclerView.setHasFixedSize(true);
@@ -67,6 +67,7 @@ public class ViewTasks extends AppCompatActivity implements AddTaskDialog.AddTas
 
         this.taskRecyclerView.setAdapter(this.taskAdapter);
         this.taskRecyclerView.setLayoutManager(this.taskLayoutManager);
+
     }
 
     /**

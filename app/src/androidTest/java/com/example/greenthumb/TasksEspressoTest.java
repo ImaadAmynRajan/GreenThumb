@@ -2,18 +2,15 @@ package com.example.greenthumb;
 
 import android.os.SystemClock;
 import android.text.InputType;
-import android.view.KeyEvent;
 import android.widget.DatePicker;
 
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,10 +19,10 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.pressKey;
-import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -35,13 +32,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withInputType;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertTrue;
 
 public class TasksEspressoTest {
     private final String testEmail = "ben.kelly@dal.ca";
@@ -60,9 +53,21 @@ public class TasksEspressoTest {
         // login
         onView(withId(R.id.login_button)).perform(click());
 
-        // wait for ViewTasks page to load
+        // wait for Home page to load
         SystemClock.sleep(2000);
+
+        //navigate to ViewTasks page & wait for it to lodd
+        onView(withId(R.id.toTaskPage))
+                .perform(click());
+        SystemClock.sleep(1000);
+
     }
+
+    @Before
+    public void initIntents() { Intents.init(); }
+
+    @After
+    public void releaseIntents() { Intents.release(); }
 
     // checks that the "Add Task" dialog contains four views
     @Test
@@ -90,8 +95,8 @@ public class TasksEspressoTest {
 
         // select date
         onView(withId(R.id.buttonDate)).perform(click());
-        onView(withClassName(equalTo(DatePicker.class.getName()))).
-                perform(PickerActions.setDate(1970, 1, 1));
+        onView(withClassName(equalTo(DatePicker.class.getName())))
+                .perform(PickerActions.setDate(1970, 1, 1));
         onView(withText("OK")).perform(click());
 
         // verify preview text
@@ -144,6 +149,25 @@ public class TasksEspressoTest {
         // we won't know which user is there, but we can check that "Select Assignee" wasn't selected
         // meaning we successfully selected a user
         onView(withId(R.id.spinnerAssignee)).check(matches(not(withText("Select Assignee"))));
+    }
+
+    @Test
+    //check that navigation bar is present
+    public void verifyNavigationDisplayed() {
+        onView(withId(R.id.mainNav))
+                .check(matches(isDisplayed()));
+        onView(withId(R.id.toHomePage))
+                .check(matches(isDisplayed()));
+        onView(withId(R.id.toTaskPage))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    //check that navigation bar can take user from Tasks -> Home Page
+    public void testReturnHome() {
+        onView(withId(R.id.toHomePage))
+                .perform(click());
+        intended(hasComponent(HomePage.class.getName()));
     }
 
     @Test
