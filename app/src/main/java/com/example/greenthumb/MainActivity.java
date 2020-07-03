@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
                 if (list_of_User != null) {
                     Toast.makeText(MainActivity.this, "successful login", Toast.LENGTH_SHORT).show();
                     Intent homePage = new Intent(MainActivity.this, HomePage.class);
-                    CurrentUser.email = list_of_User.getEmail();
                     startActivity(homePage);
                 } else {
                     Toast.makeText(MainActivity.this, "Please login", Toast.LENGTH_SHORT).show();
@@ -108,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
                                         Toast.makeText(MainActivity.this, "successful login",
                                                 Toast.LENGTH_SHORT).show();
                                         Intent homePage = new Intent(MainActivity.this, HomePage.class);
-                                        CurrentUser.email = user_Email;
                                         startActivity(homePage);
 
                                     } else {

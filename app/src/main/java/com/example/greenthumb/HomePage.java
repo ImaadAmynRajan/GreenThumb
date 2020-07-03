@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -91,7 +92,7 @@ public class HomePage extends NavigationBar {
             // ensure that assignee label matches email of current user
             if (info.get("assigneeLabel") != null) {
                 assigneeLabel = (String) info.get("assigneeLabel");
-                if (!assigneeLabel.equals(CurrentUser.email)) {
+                if (!assigneeLabel.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
                     continue;
                 }
             } else {
