@@ -1,6 +1,7 @@
 package com.example.greenthumb;
 import java.text.DateFormat;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -119,5 +120,16 @@ public class Task {
      */
     public void markAsFinished() {
         this.isFinished = true;
+    }
+
+    /**
+     * Returns whether the task is overdue
+     * @return boolean representing whether the task is overdue or not
+     */
+    public boolean isOverdue() {
+        if (getDueDate() != null) {
+            return !isFinished && Calendar.getInstance().getTimeInMillis() > getDueDate();
+        }
+        return false;
     }
 }
