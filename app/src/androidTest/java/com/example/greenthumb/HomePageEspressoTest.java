@@ -80,6 +80,13 @@ public class HomePageEspressoTest {
                     .check(matches(hasDescendant(hasDescendant(withText("Assigned to: " + testEmail)))));
         }
     }
+    
+    @Test
+    public void logout() {
+        onView(withId(R.id.logout_button))
+                .perform(click());
+        intended(hasComponent(MainActivity.class.getName()));
+    }
 
     /**
      * Returns the number of child views contained within a view
