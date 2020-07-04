@@ -14,7 +14,14 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -36,6 +43,8 @@ public class AddTaskDialog extends AppCompatDialogFragment {
     private String taskTitle = null;
     private Date dueDate = null;
 
+    private ArrayList<User> users;
+
     private AddTaskDialogListener listener;
 
     /**
@@ -45,6 +54,10 @@ public class AddTaskDialog extends AppCompatDialogFragment {
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // load all the users from the platform
+        users = new ArrayList<>();
+        getUsers();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.add_task_dialog, null);
@@ -73,7 +86,6 @@ public class AddTaskDialog extends AppCompatDialogFragment {
 
         spinnerTaskTitle = view.findViewById(R.id.spinnerTaskTitle);
         spinnerAssignee = view.findViewById(R.id.spinnerAssignee);
-        loadAssigneeOptions(R.layout.support_simple_spinner_dropdown_item);
 
         editTextDatePreview = view.findViewById(R.id.editTextDatePreview);
         buttonDate = view.findViewById(R.id.buttonDate);
@@ -132,10 +144,10 @@ public class AddTaskDialog extends AppCompatDialogFragment {
     Reference https://stackoverflow.com/questions/41809942/how-to-programatically-set-entries-of-spinner-in-android
      */
     private void loadAssigneeOptions(int spinner) {
-        String [] userLabels = new String[ViewTasks.users.size() + 1];
+        String [] userLabels = new String[users.size() + 1];
         userLabels[0] = "Select Assignee";
-        for (int i = 0; i < ViewTasks.users.size(); i++) {
-            userLabels[i + 1] = ViewTasks.users.get(i).getEmail();
+        for (int i = 0; i < users.size(); i++) {
+            userLabels[i + 1] = users.get(i).getEmail();
         }
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this.getContext(), spinner, userLabels);
         this.spinnerAssignee.setAdapter(spinnerArrayAdapter);
@@ -145,12 +157,51 @@ public class AddTaskDialog extends AppCompatDialogFragment {
     private Object getAssigneeSelection() {
         String assignee = this.spinnerAssignee.getSelectedItem().toString();
         // now find it in our user array
-        for (User u : ViewTasks.users) {
+        for (User u : users) {
             if (u.getEmail().equals(assignee)) {
                 return u;
             }
         }
         return null;
+    }
+
+    /**
+     * This function gets a list of users that we have in our database
+     * We need this list of users so we can assign tasks to users
+     * Reference https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
+     */
+    private void getUsers() {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("users");
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // send the users to be turned into User objects
+                collectUsers(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * This function is used as the callback for getUsers
+     * This allows us to assign our list of users to our class variable after they have
+     * been retrieved
+     * Reference https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
+     * @param dataSnapshot A snap shot of the users branch of the database
+     */
+    private void collectUsers(DataSnapshot dataSnapshot) {
+        for (DataSnapshot dp: dataSnapshot.getChildren()) {
+            User newUser = dp.getValue(User.class);
+            /*String id = dp.getKey();
+            String email = (String) dp.getValue();*/
+            users.add(newUser);
+        }
+        // now that we have the users, load them into the spinner
+        loadAssigneeOptions(R.layout.support_simple_spinner_dropdown_item);
     }
 
     /**

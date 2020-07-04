@@ -53,9 +53,8 @@ public class ViewTasks extends NavigationBar implements AddTaskDialog.AddTaskDia
         // init task list and user list
         this.tasks = new ArrayList<>();
         users = new ArrayList<>();
-        // collect all the users and tasks we have in our database
+        // collect all tasks we have in our database
         getTasks();
-        getUsers();
 
 
         // initialize RecyclerView
@@ -144,43 +143,6 @@ public class ViewTasks extends NavigationBar implements AddTaskDialog.AddTaskDia
             this.tasks.add(new Task(id, title, date, new User(assigneeId, assigneeLabel), isFinished));
         }
         this.taskAdapter.notifyDataSetChanged();
-    }
-
-    /**
-    * This function gets a list of users that we have in our database
-    * We need this list of users so we can assign tasks to users
-    * Reference https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
-     */
-    private void getUsers() {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("users");
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // send the users to be turned into User objects
-                collectUsers(dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    /**
-    * This function is used as the callback for getUsers
-    * This allows us to assign our list of users to our class variable after they have
-    * been retrieved
-    * Reference https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
-    * @param dataSnapshot A snap shot of the users branch of the database
-     */
-    private void collectUsers(DataSnapshot dataSnapshot) {
-        for (DataSnapshot dp: dataSnapshot.getChildren()) {
-            User newUser = dp.getValue(User.class);
-            /*String id = dp.getKey();
-            String email = (String) dp.getValue();*/
-            users.add(newUser);
-        }
     }
 
     /**
