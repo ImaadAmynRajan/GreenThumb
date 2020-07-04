@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
              */
             @Override
             public void onClick(View v) {
-                String user_Email = email.getText().toString();
+                final String user_Email = email.getText().toString();
                 String user_Password = password.getText().toString();
                 if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
                     Toast.makeText(MainActivity.this, "Please enter both user email and password ", Toast.LENGTH_SHORT).show();
