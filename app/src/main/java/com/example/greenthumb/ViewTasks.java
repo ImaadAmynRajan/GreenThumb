@@ -30,7 +30,6 @@ public class ViewTasks extends NavigationBar implements AddTaskDialog.AddTaskDia
     private RecyclerView.LayoutManager taskLayoutManager;
 
     private ArrayList<Task> tasks;
-    public static ArrayList<User> users;
 
     /**
      * Initializes the ViewTasks activity. Populates RecyclerView of tasks.
@@ -52,7 +51,6 @@ public class ViewTasks extends NavigationBar implements AddTaskDialog.AddTaskDia
 
         // init task list and user list
         this.tasks = new ArrayList<>();
-        users = new ArrayList<>();
         // collect all tasks we have in our database
         getTasks();
 
