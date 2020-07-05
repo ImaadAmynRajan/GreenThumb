@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -130,15 +131,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                                     // select the current task
                                     Task task = TaskAdapter.this.tasks.get(position);
 
-                                    // find our current user based on the current UID
-                                    String curId = FirebaseAuth.getInstance().getUid();
-                                    User user = new User();
-                                    for (User u: ViewTasks.users) {
-                                        if (u.getId().equals(curId)) {
-                                            user = new User(u.getId(), u.getEmail());
-                                            break;
-                                        }
-                                    }
+                                    // get the details of the current user
+                                    FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+                                    User user = new User(curUser.getUid(), curUser.getEmail());
+
                                     // assign our user
                                     task.setAssignee(user);
 

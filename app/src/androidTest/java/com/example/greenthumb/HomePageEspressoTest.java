@@ -88,6 +88,16 @@ public class HomePageEspressoTest {
         intended(hasComponent(MainActivity.class.getName()));
     }
 
+    @Test
+    public void testAddTaskButton() {
+        // test that the add task button is shown
+        onView(withId(R.id.addTaskButton)).check(matches(isDisplayed()));
+
+        // test that the add task dialog is shown when clicking on the task button
+        onView(withId(R.id.addTaskButton)).perform(click());
+        onView(withId(R.id.spinnerTaskTitle)).check(matches(isDisplayed()));
+    }
+
     /**
      * Returns the number of child views contained within a view
      * @param id id of the parent view

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
-public class HomePage extends NavigationBar {
+public class HomePage extends NavigationBar implements AddTaskDialog.AddTaskDialogListener {
     private RecyclerView taskRecyclerView;
     private RecyclerView.Adapter taskAdapter;
     private RecyclerView.LayoutManager taskLayoutManager;
@@ -66,6 +66,15 @@ public class HomePage extends NavigationBar {
                 Intent loginPage = new Intent(HomePage.this, MainActivity.class);
                 startActivity(loginPage);
 
+            }
+        });
+
+        // click listener for the add task button
+        FloatingActionButton newTaskButton = findViewById(R.id.addTaskButton);
+        newTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openNewTaskDialog();
             }
         });
     }
@@ -140,5 +149,44 @@ public class HomePage extends NavigationBar {
             this.tasks.add(new Task(id, title, date, new User(assigneeId, assigneeLabel), isFinished));
         }
         this.taskAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Creates and shows an instance of AddTaskDialog
+     */
+    private void openNewTaskDialog() {
+        AddTaskDialog addTaskDialog = new AddTaskDialog();
+        addTaskDialog.show(getSupportFragmentManager(), "add new task");
+    }
+
+    /**
+     * Adds a task to the app's database and ArrayList of tasks
+     * @param title description of the task
+     * @param dueDate date by which the task must be completed
+     * @param assignee user to which the task has been assigned
+     */
+    @Override
+    public void addTask(String title, Date dueDate, Object assignee) {
+        // get our database reference to the tasks branch
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("tasks");
+        // create a new id for the task
+        String id = db.push().getKey();
+        // create a task
+        Task newTask = new Task(id, title, dueDate, (User) assignee);
+
+        // push that task to the database
+        db.child(id).setValue(newTask);
+
+        // add task to ViewTasks screen if it is assigned to the current user
+        if (
+                newTask.getAssigneeLabel() != null &&
+                        newTask.getAssigneeLabel().equals(
+                                FirebaseAuth.getInstance().getCurrentUser().getEmail()
+                        )
+        ) {
+            this.tasks.add(0, newTask);
+            // update the screen to display the new task
+            this.taskAdapter.notifyDataSetChanged();
+        }
     }
 }
