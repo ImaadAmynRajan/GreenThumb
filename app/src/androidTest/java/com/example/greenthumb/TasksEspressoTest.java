@@ -96,11 +96,11 @@ public class TasksEspressoTest {
         // select date
         onView(withId(R.id.buttonDate)).perform(click());
         onView(withClassName(equalTo(DatePicker.class.getName())))
-                .perform(PickerActions.setDate(1970, 1, 1));
+                .perform(PickerActions.setDate(2025, 1, 1));
         onView(withText("OK")).perform(click());
 
         // verify preview text
-        onView(withId(R.id.editTextDatePreview)).check(matches(withText("Jan. 1, 1970")));
+        onView(withId(R.id.editTextDatePreview)).check(matches(withText("Jan. 1, 2025")));
     }
 
     @Test
@@ -118,7 +118,7 @@ public class TasksEspressoTest {
         // select date
         onView(withId(R.id.buttonDate)).perform(click());
         onView(withClassName(equalTo(DatePicker.class.getName()))).
-                perform(PickerActions.setDate(1970, 1, 1));
+                perform(PickerActions.setDate(2025, 1, 1));
         onView(withText("OK")).perform(click());
 
         // submit data
@@ -127,7 +127,7 @@ public class TasksEspressoTest {
         // check that the newest task contains the specified data
         onView(new RecyclerViewMatcher(R.id.recyclerViewTasks).atPosition(0))
                 .check(matches(allOf(hasDescendant(withText("Install and maintain seasonal plants")),
-                        hasDescendant(withText("Due date: Jan. 1, 1970")),
+                        hasDescendant(withText("Due date: Jan. 1, 2025")),
                         hasDescendant(withText("Assigned to: No one")))));
     }
 
