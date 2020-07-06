@@ -2,11 +2,9 @@ package com.example.greenthumb;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -124,61 +122,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                     public boolean onMenuItemClick(MenuItem item) {
                         switch(item.getItemId()) {
                             case R.id.claimButton:
-                                if (item.isEnabled()) {
-                                    // set up our database reference to the tasks branch
-                                    DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("tasks");
-
-                                    // select the current task
-                                    Task task = TaskAdapter.this.tasks.get(position);
-
-                                    // get the details of the current user
-                                    FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
-                                    User user = new User(curUser.getUid(), curUser.getEmail());
-
-                                    // assign our user
-                                    task.setAssignee(user);
-
-                                    // update the db entry
-                                    db.child(task.getId()).setValue(task);
-
-                                    // notify the class that there has been changes and we need to update the UI
-                                    TaskAdapter.this.notifyDataSetChanged();
-                                }
+                                if (item.isEnabled())
+                                    claimTask(position);
                                 break;
                             case R.id.doneButton:
-                                if (item.isEnabled()) {
-                                    // set up our database reference to the tasks branch
-                                    DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("tasks");
-
-                                    // select the current task
-                                    Task task = TaskAdapter.this.tasks.get(position);
-                                    
-                                    // mark current task as finished
-                                    task.markAsFinished();
-
-                                    // update the db entry
-                                    db.child(task.getId()).setValue(task);
-
-                                    // notify the class that there has been changes and we need to update the UI
-                                    TaskAdapter.this.notifyDataSetChanged();
-                                }
+                                if (item.isEnabled())
+                                    markTaskAsDone(position);
                                 break;
                             case R.id.deleteButton:
-                                // set up our database reference to the tasks branch
-                                DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("tasks");
-
-                                // select the current task
-                                Task task = TaskAdapter.this.tasks.get(position);
-
-                                // remove task from our task list
-                                TaskAdapter.this.tasks.remove(task);
-
-                                // remove task from the database
-                                db.child(task.getId()).removeValue();
-
-                                // notify the class that there has been changes and we need to update the UI
-                                TaskAdapter.this.notifyDataSetChanged();
-
+                                deleteTask(position);
                                 break;
                             default:
                                 return false;
@@ -200,5 +152,72 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @Override
     public int getItemCount() {
         return this.tasks.size();
+    }
+
+    /**
+     * Marks a task as done and then updates the RecyclerView and database
+     * @param position the position of the task in the RecyclerView
+     */
+    private void claimTask(int position) {
+        // set up our database reference to the tasks branch
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("tasks");
+
+        // select the current task
+        Task task = TaskAdapter.this.tasks.get(position);
+
+        // get the details of the current user
+        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+        User user = new User(curUser.getUid(), curUser.getEmail());
+
+        // assign our user
+        task.setAssignee(user);
+
+        // update the db entry
+        db.child(task.getId()).setValue(task);
+
+        // notify the class that there has been changes and we need to update the UI
+        TaskAdapter.this.notifyDataSetChanged();
+    }
+
+    /**
+     * Marks a task as done and then updates the RecyclerView and database
+     * @param position the position of the task in the RecyclerView
+     */
+    private void markTaskAsDone(int position) {
+        // set up our database reference to the tasks branch
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("tasks");
+
+        // select the current task
+        Task task = TaskAdapter.this.tasks.get(position);
+
+        // mark current task as finished
+        task.markAsFinished();
+
+        // update the db entry
+        db.child(task.getId()).setValue(task);
+
+        // notify the class that there has been changes and we need to update the UI
+        TaskAdapter.this.notifyDataSetChanged();
+    }
+
+    /**
+     * Deletes a task and then updates the RecyclerView and database
+     * @param position the position of the task in the RecyclerView
+     */
+    private void deleteTask(int position) {
+        // set up our database reference to the tasks branch
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("tasks");
+
+        // select the current task
+        Task task = TaskAdapter.this.tasks.get(position);
+
+        // remove task from our task list
+        TaskAdapter.this.tasks.remove(task);
+
+        // remove task from the database
+        db.child(task.getId()).removeValue();
+
+        // notify the class that there has been changes and we need to update the UI
+        TaskAdapter.this.notifyDataSetChanged();
     }
 }
