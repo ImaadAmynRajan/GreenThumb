@@ -12,6 +12,8 @@ import org.junit.Test;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
@@ -24,13 +26,32 @@ import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.not;
 
 public class TaskOptionsEspressoTests {
+    private final String testEmail = "ben.kelly@dal.ca";
+    private final String testPassword = "Test1234";
 
     @Rule
-    public ActivityScenarioRule<ViewTasks> activityScenarioRule
-            = new ActivityScenarioRule<>(ViewTasks.class);
+    public ActivityScenarioRule<MainActivity> activityScenarioRule
+            = new ActivityScenarioRule<>(MainActivity.class);
 
     @Before
     public void setUp() {
+        // first login
+
+        // enter test credentials
+        onView(withId(R.id.Email)).perform(click()).perform(typeText(testEmail)).perform(closeSoftKeyboard());
+        onView(withId(R.id.Password)).perform(click()).perform(typeText(testPassword)).perform(closeSoftKeyboard());
+
+        // login
+        onView(withId(R.id.login_button)).perform(click());
+
+        // wait for Home page to load
+        SystemClock.sleep(2000);
+
+        //navigate to ViewTasks page & wait for it to load
+        onView(withId(R.id.toTaskPage))
+                .perform(click());
+        SystemClock.sleep(1000);
+
         // wait for UI
         SystemClock.sleep(1000);
 
