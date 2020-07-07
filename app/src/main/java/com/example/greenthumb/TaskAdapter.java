@@ -37,7 +37,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         private TextView assignee;
         private ImageButton options;
         private TextView doneText;
+        private TextView overdueText;
         private ImageView checkmark;
+        private ImageView overdue;
 
         /**
          * Creates a ViewHolder to store task items
@@ -52,6 +54,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             this.options = itemView.findViewById(R.id.taskOptions);
             this.doneText = itemView.findViewById(R.id.textViewDone);
             this.checkmark = itemView.findViewById(R.id.checkmark);
+            this.overdue = itemView.findViewById(R.id.overdue);
+            this.overdueText = itemView.findViewById(R.id.textViewOverdue);
         }
     }
 
@@ -97,9 +101,23 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         String assignee = task.getAssigneeId() == null ? "No one" : task.getAssigneeLabel();
         holder.assignee.setText("Assigned to: " + assignee);
 
-        // make done indicators visible only if task is marked as done
-        holder.doneText.setVisibility(task.isFinished() ? View.VISIBLE : View.INVISIBLE);
-        holder.checkmark.setVisibility(task.isFinished() ? View.VISIBLE : View.INVISIBLE);
+        // if block checks for which icon to display
+        if (task.isFinished()) {
+            // if the task is finished, we want to display the check mark
+            holder.doneText.setVisibility(View.VISIBLE);
+            holder.checkmark.setVisibility(View.VISIBLE);
+        } else if (task.isOverdue()) {
+            // if the task is overdue, we want to display the overdue symbol
+            holder.overdue.setVisibility(View.VISIBLE);
+            holder.overdueText.setVisibility(View.VISIBLE);
+        } else {
+            // if it is neither, then all icons should be invisible
+            holder.doneText.setVisibility(View.INVISIBLE);
+            holder.checkmark.setVisibility(View.INVISIBLE);
+            holder.overdue.setVisibility(View.INVISIBLE);
+            holder.overdueText.setVisibility(View.INVISIBLE);
+        }
+
 
         // configure options menu
         // popup menu code based on https://www.javatpoint.com/android-popup-menu-example#:~:text=%E2%86%92%20%E2%86%90%20prev-,Android%20Popup%20Menu%20Example,The%20android. (accessed June 26, 2020)
