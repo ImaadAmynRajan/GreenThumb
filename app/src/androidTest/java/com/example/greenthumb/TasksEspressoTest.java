@@ -202,6 +202,30 @@ public class TasksEspressoTest {
         onView(withId(R.id.recyclerViewTasks)).check(matches(hasChildCount(numberOfTasks - 1)));
     }
 
+    @Test
+    public void overdueIconTest(){
+        onView(withId(R.id.addTaskButton))
+                .perform(click());
+
+        // select title from dropdown
+        onView(withId(R.id.spinnerTaskTitle)).perform(click());
+        onData(anything()).inRoot(RootMatchers.isPlatformPopup()).atPosition(1).perform(click());
+
+        // select date in the past
+        onView(withId(R.id.buttonDate)).perform(click());
+        onView(withClassName(equalTo(DatePicker.class.getName())))
+                .perform(PickerActions.setDate(1980, 1, 1));
+        onView(withText("OK")).perform(click());
+
+        // add the task
+        SystemClock.sleep(1000);
+        onView(withText("Add")).perform(click());
+
+        // check that the newest task displays the overdue icon
+        onView(new RecyclerViewMatcher(R.id.recyclerViewTasks).atPosition(0))
+                .check(matches(allOf(hasDescendant(allOf(withId(R.id.overdue), isDisplayed())))));
+    }
+
     /**
      * Returns the number of child views contained within a view
      * @param id id of the parent view
