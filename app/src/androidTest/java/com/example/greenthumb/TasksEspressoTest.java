@@ -31,6 +31,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withInputType;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -100,7 +101,7 @@ public class TasksEspressoTest {
         onView(withText("OK")).perform(click());
 
         // verify preview text
-        onView(withId(R.id.editTextDatePreview)).check(matches(withText("Jan. 1, 2025")));
+        onView(withId(R.id.editTextDatePreview)).check(matches(anyOf(withText("Jan. 1, 2025"), withText("Jan 1, 2025"))));
     }
 
     @Test
@@ -127,7 +128,7 @@ public class TasksEspressoTest {
         // check that the newest task contains the specified data
         onView(new RecyclerViewMatcher(R.id.recyclerViewTasks).atPosition(0))
                 .check(matches(allOf(hasDescendant(withText("Install and maintain seasonal plants")),
-                        hasDescendant(withText("Due date: Jan. 1, 2025")),
+                        hasDescendant(anyOf(withText("Due date: Jan. 1, 2025"), withText("Due date: Jan 1, 2025"))),
                         hasDescendant(withText("Assigned to: No one")))));
     }
 
