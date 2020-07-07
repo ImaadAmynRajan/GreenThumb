@@ -111,7 +111,9 @@ public class AddTaskDialog extends AppCompatDialogFragment {
                         dueDate = new Date(year - 1900, month, dayOfMonth);
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-
+                /* disables selection of past dates
+                code snippet from https://stackoverflow.com/questions/23762231/how-to-disable-past-dates-in-android-date-picker */
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 datePickerDialog.show();
             }
         });
