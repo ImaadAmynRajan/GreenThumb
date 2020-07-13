@@ -1,4 +1,4 @@
-package com.example.greenthumb;
+package com.example.greenthumb.tasks;
 
 import android.view.View;
 import android.widget.ImageButton;
@@ -6,6 +6,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.greenthumb.R;
 
 /**
  * Represents a ViewHolder for tasks.

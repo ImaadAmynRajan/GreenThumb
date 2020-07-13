@@ -1,4 +1,6 @@
-package com.example.greenthumb;
+package com.example.greenthumb.tasks;
+import com.example.greenthumb.User;
+
 import java.text.DateFormat;
 
 import java.util.Calendar;
