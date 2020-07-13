@@ -93,7 +93,7 @@ public class NotificationProducer extends BroadcastReceiver {
             boolean isFinished;
 
             // set all our values
-            String title = (String) info.get("title");
+            TaskTitle title = (TaskTitle) info.get("title");
             String id = (String) dp.getKey();
 
             if (info.get("dueDate") != null) {
