@@ -13,6 +13,7 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -71,7 +72,8 @@ public class TaskOptionsEspressoTests {
     public void testOptionsDisabled() {
         // click options button
         onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
-                actionOnItemAtPosition(0, CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+                actionOnItemAtPosition(getIndexOfLastChildOfViewWithId(R.id.recyclerViewTasks),
+                        CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
 
         // wait for menu items to appear
         SystemClock.sleep(1000);
@@ -79,9 +81,13 @@ public class TaskOptionsEspressoTests {
         // click Claim button
         onView(withText(R.string.claim)).perform(click());
 
+        // wait
+        SystemClock.sleep(1000);
+
         // click options button
         onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
-                actionOnItemAtPosition(0, CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+                actionOnItemAtPosition(getIndexOfLastChildOfViewWithId(R.id.recyclerViewTasks),
+                        CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
 
         // wait for menu items to appear
         SystemClock.sleep(1000);
@@ -92,9 +98,13 @@ public class TaskOptionsEspressoTests {
         // click Mark As Done button
         onView(withText(R.string.mark_as_done)).perform(click());
 
+        // wait
+        SystemClock.sleep(1000);
+
         // click options button
         onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
-                actionOnItemAtPosition(0, CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+                actionOnItemAtPosition(getIndexOfLastChildOfViewWithId(R.id.recyclerViewTasks),
+                        CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
 
         // wait for menu items to appear
         SystemClock.sleep(1000);
@@ -124,6 +134,9 @@ public class TaskOptionsEspressoTests {
         // click Mark As Done button
         onView(withText(R.string.mark_as_done)).perform(click());
 
+        // wait
+        SystemClock.sleep(1000);
+
         // check that the newest task displays "Done" and a checkmark
         onView(new RecyclerViewMatcher(R.id.recyclerViewTasks).atPosition(0))
                 .check(matches(allOf(hasDescendant(allOf(withText("Done"), isDisplayed())),
@@ -138,5 +151,37 @@ public class TaskOptionsEspressoTests {
 
         // delete the task
         onView(withText(R.string.delete)).perform(click());
+    }
+
+    /**
+     * Returns the number of child views contained within a view
+     * @param id id of the parent view
+     * @return the number of child views contained within the view
+     */
+    private int getChildCountOfViewWithId(int id) {
+        int count = 0;
+
+        // try matching the view with an incrementing number of child views
+        while (count < 10000) {
+            try {
+                onView(withId(id)).check(matches(hasChildCount(count)));
+                return count;
+            } catch (Error failedAssertion) {
+                count++;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * Returns the index of the last child in a view
+     * @param id id of the parent view
+     * @return the index of the last child in the view
+     */
+    private int getIndexOfLastChildOfViewWithId(int id) {
+        int numberOfChildren = getChildCountOfViewWithId(id);
+        if (numberOfChildren > 0) return numberOfChildren - 1;
+        return 0;
     }
 }

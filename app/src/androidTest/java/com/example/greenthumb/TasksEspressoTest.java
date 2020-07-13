@@ -25,6 +25,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -126,10 +127,21 @@ public class TasksEspressoTest {
         onView(withText("Add")).perform(click());
 
         // check that the newest task contains the specified data
-        onView(new RecyclerViewMatcher(R.id.recyclerViewTasks).atPosition(0))
+        onView(new RecyclerViewMatcher(R.id.recyclerViewTasks).atPosition(getIndexOfLastChildOfViewWithId(R.id.recyclerViewTasks)))
                 .check(matches(allOf(hasDescendant(withText("Install and maintain seasonal plants")),
                         hasDescendant(anyOf(withText("Due date: Jan. 1, 2025"), withText("Due date: Jan 1, 2025"))),
                         hasDescendant(withText("Assigned to: No one")))));
+
+        // click options button
+        onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
+                actionOnItemAtPosition(getIndexOfLastChildOfViewWithId(R.id.recyclerViewTasks),
+                        CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+
+        // wait for menu items to appear
+        SystemClock.sleep(1000);
+
+        // delete the task
+        onView(withText(R.string.delete)).perform(click());
     }
 
     @Test
@@ -223,7 +235,7 @@ public class TasksEspressoTest {
         onView(withText("Add")).perform(click());
 
         // check that the newest task displays the overdue icon
-        onView(new RecyclerViewMatcher(R.id.recyclerViewTasks).atPosition(0))
+        onView(new RecyclerViewMatcher(R.id.recyclerViewTasks).atPosition(getIndexOfLastChildOfViewWithId(R.id.recyclerViewTasks)))
                 .check(matches(allOf(hasDescendant(allOf(withId(R.id.overdue), isDisplayed())))));
     }
 
@@ -245,6 +257,17 @@ public class TasksEspressoTest {
             }
         }
 
+        return 0;
+    }
+
+    /**
+     * Returns the index of the last child in a view
+     * @param id id of the parent view
+     * @return the index of the last child in the view
+     */
+    private int getIndexOfLastChildOfViewWithId(int id) {
+        int numberOfChildren = getChildCountOfViewWithId(id);
+        if (numberOfChildren > 0) return numberOfChildren - 1;
         return 0;
     }
 }
