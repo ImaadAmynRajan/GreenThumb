@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 public class TestOverdueTasks {
     @Test
     public void taskOverdueTest() {
-        Task task = new Task("fdfd-fdfd", "test title", new Date(3333), null);
+        Task task = new Task("fdfd-fdfd", TaskTitle.None, new Date(3333), null);
 
         // should be overdue
         assertTrue(task.isOverdue());
@@ -23,7 +23,7 @@ public class TestOverdueTasks {
 
         // make a new task in the future
         long curDate = Calendar.getInstance().getTimeInMillis();
-        task = new Task("test", "test", new Date(curDate + 1000), null);
+        task = new Task("test", TaskTitle.None, new Date(curDate + 1000), null);
 
         // this task shouldn't be over due
         assertFalse(task.isOverdue());
