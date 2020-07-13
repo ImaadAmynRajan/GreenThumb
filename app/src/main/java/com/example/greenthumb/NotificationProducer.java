@@ -66,8 +66,9 @@ public class NotificationProducer extends BroadcastReceiver {
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // send our tasks to be added to our recycle viewer
-                checkForOverdue(dataSnapshot);
+                for (DataSnapshot item : dataSnapshot.getChildren()) {
+                    checkForOverdue(item.getValue(Task.class));
+                }
             }
 
             @Override
@@ -78,59 +79,20 @@ public class NotificationProducer extends BroadcastReceiver {
     }
 
     /**
-     * This method cycles through all the tasks in the database searching for tasks
-     * that match the current user. If it finds that the user has an overdue task, it will notify the user
-     * with a push notification
+     * Checks whether a task is overdue. If so, notify the user with a push notification
      * Reference: https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
-     * @param dataSnapshot A snapshot of the tasks branch of the database
+     * @param task task to check for being overdue
      */
-    private void checkForOverdue(DataSnapshot dataSnapshot) {
+    private void checkForOverdue(Task task) {
         String userId = FirebaseAuth.getInstance().getUid();
-        for (DataSnapshot dp: dataSnapshot.getChildren()) {
-            Map<String, Object> info = (Map<String, Object>) dp.getValue();
-            String assigneeLabel, assigneeId;
-            Date date;
-            boolean isFinished;
-
-            // set all our values
-            String title = (String) info.get("title");
-            String id = (String) dp.getKey();
-
-            if (info.get("dueDate") != null) {
-                date = new Date((Long) info.get("dueDate"));
-            } else {
-                date = null;
-            }
-
-            if (info.get("assigneeId") != null) {
-                assigneeId = (String) info.get("assigneeId");
-            } else {
-                assigneeId = null;
-            }
-
-            if (info.get("assigneeLabel") != null) {
-                assigneeLabel = (String) info.get("assigneeLabel");
-            } else {
-                assigneeLabel = null;
-            }
-
-            if (info.get("finished") != null) {
-                isFinished = (boolean) info.get("finished");
-            } else {
-                isFinished = false;
-            }
-
-            Task task = new Task(id, title, date, new User(assigneeId, assigneeLabel), isFinished);
-
-            // check if the task isn't finished, and it belongs to the current user, and is overdue
-            if (
-                            userId.equals(task.getAssigneeId()) &&
-                            task.isOverdue()
-            ) {
-                // build the content of the notification on the title of the task
-                String content = task.getTitle() + " is overdue!";
-                sendNotification(content);
-            }
+        // check if the task isn't finished, and it belongs to the current user, and is overdue
+        if (
+                userId.equals(task.getAssigneeId()) &&
+                        task.isOverdue()
+        ) {
+            // build the content of the notification on the title of the task
+            String content = task.getTitle() + " is overdue!";
+            sendNotification(content);
         }
     }
 }

@@ -1,35 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/layout_add_task"
-    android:layout_width="match_parent" android:layout_height="match_parent" android:padding="24dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.greenthumb.AddTaskDialog">
+    <data>
+        <variable
+            name="task"
+            type="com.example.greenthumb.TaskViewModel"/>
+        <import type="com.example.greenthumb.TaskTitle"/>
+    </data>
+    <RelativeLayout
+        android:id="@+id/layout_add_task"
+        android:layout_width="match_parent" android:layout_height="match_parent" android:padding="24dp" >
+        <Spinner
+            android:id="@+id/spinnerTaskTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/task_titles"
+            android:paddingBottom="30dp"/>
 
-    <Spinner
-        android:id="@+id/spinnerTaskTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/task_titles"
-        android:paddingBottom="30dp"/>
+        <Spinner
+            android:id="@+id/spinnerAssignee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinnerTaskTitle"
+            android:selectedItemPosition="@={TaskTitle.titleToInt(task.title)}"
+            android:entries="@array/task_assignees"
+            android:paddingBottom="30dp"/>
 
-    <Spinner
-        android:id="@+id/spinnerAssignee"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/spinnerTaskTitle"
-        android:entries="@array/task_assignees"
-        android:paddingBottom="30dp"/>
+        <EditText
+            android:id="@+id/editTextDatePreview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinnerAssignee"
+            android:ems="10"
+            android:editable="false"/>
 
-    <EditText
-        android:id="@+id/editTextDatePreview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/spinnerAssignee"
-        android:ems="10"
-        android:editable="false"/>
-
-    <Button
-        android:id="@+id/buttonDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/spinnerAssignee"
-        android:layout_alignParentRight="true"
-        android:text="@string/set_due_date_button" />
-</RelativeLayout>
+        <Button
+            android:id="@+id/buttonDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinnerAssignee"
+            android:layout_alignParentRight="true"
+            android:text="@string/set_due_date_button" />
+    </RelativeLayout>
+</layout>

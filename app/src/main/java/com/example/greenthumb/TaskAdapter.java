@@ -5,122 +5,45 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 /**
- * Represents an Adapter that configures task items in a ViewHolder
- * Adapter code based on https://www.youtube.com/watch?v=17NbUcEts9c (accessed June 7, 2020)
+ * Represents a custom adapter for Tasks in the RecyclerView.
  */
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
-    private Context context;
-    private ArrayList<Task> tasks;
+public class TaskAdapter extends FirebaseRecyclerAdapter<Task, TaskHolder> {
+    private Context context = null;
 
-    /**
-     * Represents a ViewHolder that contains tasks
-     */
-    public static class TaskViewHolder extends RecyclerView.ViewHolder {
-        private TextView title;
-        private TextView dueDate;
-        private TextView assignee;
-        private ImageButton options;
-        private TextView doneText;
-        private TextView overdueText;
-        private ImageView checkmark;
-        private ImageView overdue;
-
-        /**
-         * Creates a ViewHolder to store task items
-         * @param itemView the layout for a task item
-         */
-        public TaskViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            this.title = itemView.findViewById(R.id.textViewTaskTitle);
-            this.dueDate = itemView.findViewById(R.id.textViewTaskDueDate);
-            this.assignee = itemView.findViewById(R.id.textViewTaskAssignee);
-            this.options = itemView.findViewById(R.id.taskOptions);
-            this.doneText = itemView.findViewById(R.id.textViewDone);
-            this.checkmark = itemView.findViewById(R.id.checkmark);
-            this.overdue = itemView.findViewById(R.id.overdue);
-            this.overdueText = itemView.findViewById(R.id.textViewOverdue);
-        }
+    public TaskAdapter(FirebaseRecyclerOptions<Task> options) {
+        super(options);
     }
 
-    /**
-     * Creates a TaskAdapter containing a list of tasks
-     * @param tasks an ArrayList of tasks
-     */
-    public TaskAdapter(ArrayList<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    /**
-     * Initializes a ViewHolder for task items
-     * @param parent
-     * @param viewType
-     * @return initialized task item ViewHolder
-     */
-    @NonNull
     @Override
-    public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TaskHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         this.context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.task_item, parent, false);
-        TaskViewHolder taskViewHolder = new TaskViewHolder(view);
-        return taskViewHolder;
+        View view = LayoutInflater.from(context)
+                .inflate(R.layout.task_item, parent, false);
+        final TaskHolder holder = new TaskHolder(view);
+        return holder;
     }
 
-    /**
-     * Configures text for a task item layout in the RecyclerView
-     * @param holder the holder represents a task in the view
-     * @param position the position in the arraylist of that holder
-     */
     @Override
-    public void onBindViewHolder(@NonNull final TaskViewHolder holder, final int position) {
-        final Task task = this.tasks.get(position);
+    protected void onBindViewHolder(final TaskHolder holder, int position, Task model) {
+        // store associated task
+        final TaskViewModel task = new TaskViewModel(model);
 
-        String title = task.getTitle();
-        String dueDate = task.getDueDate() == null ? "None" : task.getDateString();
+        // set text on TaskHolder
+        holder.setTitle(model.getTitle(), context.getResources().getStringArray(R.array.task_titles));
+        holder.setDueDate(model.getDateString());
+        holder.setAssignee(model.getAssigneeLabel());
 
-        holder.title.setText(title);
-        holder.dueDate.setText("Due date: " + dueDate);
+        // toggle done/overdue indicators
+        holder.toggleDoneIndicators(task.isFinished());
+        holder.toggleOverdueIndicators(task.isOverdue());
 
-        // set the assignee text
-        String assignee = task.getAssigneeId() == null ? "No one" : task.getAssigneeLabel();
-        holder.assignee.setText("Assigned to: " + assignee);
-
-        // if block checks for which icon to display
-        if (task.isFinished()) {
-            // if the task is finished, we want to display the check mark
-            holder.doneText.setVisibility(View.VISIBLE);
-            holder.checkmark.setVisibility(View.VISIBLE);
-        } else if (task.isOverdue()) {
-            // if the task is overdue, we want to display the overdue symbol
-            holder.overdue.setVisibility(View.VISIBLE);
-            holder.overdueText.setVisibility(View.VISIBLE);
-        } else {
-            // if it is neither, then all icons should be invisible
-            holder.doneText.setVisibility(View.INVISIBLE);
-            holder.checkmark.setVisibility(View.INVISIBLE);
-            holder.overdue.setVisibility(View.INVISIBLE);
-            holder.overdueText.setVisibility(View.INVISIBLE);
-        }
-
-
-        // configure options menu
-        // popup menu code based on https://www.javatpoint.com/android-popup-menu-example#:~:text=%E2%86%92%20%E2%86%90%20prev-,Android%20Popup%20Menu%20Example,The%20android. (accessed June 26, 2020)
+        // set on-click methods for the options button and buttons in the options menu
         holder.options.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,17 +61,21 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch(item.getItemId()) {
+                        switch (item.getItemId()) {
                             case R.id.claimButton:
                                 if (item.isEnabled())
-                                    claimTask(position);
+                                    task.claim();
+                                    notifyDataSetChanged();
                                 break;
                             case R.id.doneButton:
-                                if (item.isEnabled())
-                                    markTaskAsDone(position);
+                                if (item.isEnabled()) {
+                                    task.markAsDone();
+                                    notifyDataSetChanged();
+                                }
                                 break;
                             case R.id.deleteButton:
-                                deleteTask(position);
+                                task.delete();
+                                notifyDataSetChanged();
                                 break;
                             default:
                                 return false;
@@ -161,81 +88,5 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 popupMenu.show();
             }
         });
-    }
-
-    /**
-     * Gets the number of tasks in the RecyclerView
-     * @return number of tasks in the RecyclerView
-     */
-    @Override
-    public int getItemCount() {
-        return this.tasks.size();
-    }
-
-    /**
-     * Marks a task as done and then updates the RecyclerView and database
-     * @param position the position of the task in the RecyclerView
-     */
-    private void claimTask(int position) {
-        // set up our database reference to the tasks branch
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("tasks");
-
-        // select the current task
-        Task task = TaskAdapter.this.tasks.get(position);
-
-        // get the details of the current user
-        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
-        User user = new User(curUser.getUid(), curUser.getEmail());
-
-        // assign our user
-        task.setAssignee(user);
-
-        // update the db entry
-        db.child(task.getId()).setValue(task);
-
-        // notify the class that there has been changes and we need to update the UI
-        TaskAdapter.this.notifyDataSetChanged();
-    }
-
-    /**
-     * Marks a task as done and then updates the RecyclerView and database
-     * @param position the position of the task in the RecyclerView
-     */
-    private void markTaskAsDone(int position) {
-        // set up our database reference to the tasks branch
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("tasks");
-
-        // select the current task
-        Task task = TaskAdapter.this.tasks.get(position);
-
-        // mark current task as finished
-        task.markAsFinished();
-
-        // update the db entry
-        db.child(task.getId()).setValue(task);
-
-        // notify the class that there has been changes and we need to update the UI
-        TaskAdapter.this.notifyDataSetChanged();
-    }
-
-    /**
-     * Deletes a task and then updates the RecyclerView and database
-     * @param position the position of the task in the RecyclerView
-     */
-    private void deleteTask(int position) {
-        // set up our database reference to the tasks branch
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("tasks");
-
-        // select the current task
-        Task task = TaskAdapter.this.tasks.get(position);
-
-        // remove task from our task list
-        TaskAdapter.this.tasks.remove(task);
-
-        // remove task from the database
-        db.child(task.getId()).removeValue();
-
-        // notify the class that there has been changes and we need to update the UI
-        TaskAdapter.this.notifyDataSetChanged();
     }
 }

@@ -8,7 +8,7 @@ import java.util.Date;
  * Represents a task created by a user.
  */
 public class Task {
-    private String title;
+    private TaskTitle title;
     private String id;
     private Long dueDate;
     private String assigneeId;
@@ -16,7 +16,8 @@ public class Task {
 
     private boolean isFinished = false;
 
-    public Task() { }
+    public Task() { } // default constructor for databinding
+
     /**
      * Creates a new Task
      * @param id the ID associated with the task
@@ -24,7 +25,7 @@ public class Task {
      * @param dueDate the date by which the task must be completed
      * @param user the user to which the task is assigned
      */
-    public Task(String id, String title, Date dueDate, User user) {
+    public Task(String id, TaskTitle title, Date dueDate, User user) {
         this.id = id;
         this.title = title;
         // storing it as a long allows for easier database reference
@@ -40,7 +41,7 @@ public class Task {
      * @param user the user to which the task is assigned
      * @param isFinished whether the task has been marked as finished
      */
-    public Task(String id, String title, Date dueDate, User user, boolean isFinished) {
+    public Task(String id, TaskTitle title, Date dueDate, User user, boolean isFinished) {
         this(id, title, dueDate, user);
         this.isFinished = isFinished;
     }
@@ -50,15 +51,23 @@ public class Task {
      * @return the id of the task
      */
     public String getId() {
-        return id;
+        return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**
      * Gets the title of a task
      * @return the title of a task
      */
-    public String getTitle() {
+    public TaskTitle getTitle() {
         return this.title;
+    }
+
+    public void setTitle(TaskTitle title) {
+        this.title = title;
     }
 
     /**
@@ -67,6 +76,10 @@ public class Task {
      */
     public Long getDueDate() {
         return this.dueDate;
+    }
+
+    public void setDueDate(Long dueDate) {
+        this.dueDate = dueDate;
     }
 
     /**
@@ -113,6 +126,10 @@ public class Task {
      */
     public boolean isFinished() {
         return isFinished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.isFinished = finished;
     }
 
     /**

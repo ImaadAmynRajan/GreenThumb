@@ -17,13 +17,13 @@ public class TestMarkTaskFinished {
     @Test
     public void testConstructor() {
         // create unfinished task
-        Task unfinishedTask = new Task("fdfd-fdfd","test title", new Date(3333), null, false);
+        Task unfinishedTask = new Task("fdfd-fdfd", TaskTitle.None, new Date(3333), null, false);
 
         // assert that task is marked as unfinished
         assertFalse(unfinishedTask.isFinished());
 
         // create finished task
-        Task finishedTask = new Task("fdfd-fdfd","test title", new Date(3333), null, true);
+        Task finishedTask = new Task("fdfd-fdfd", TaskTitle.None, new Date(3333), null, true);
 
         // assert that the task is marked as finished
         assertTrue(finishedTask.isFinished());

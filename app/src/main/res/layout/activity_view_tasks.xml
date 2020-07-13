@@ -25,6 +25,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_bottom_margin"
+        android:onClick="openNewTaskDialog"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
