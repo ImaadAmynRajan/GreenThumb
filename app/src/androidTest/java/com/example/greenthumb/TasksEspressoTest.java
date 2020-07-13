@@ -203,7 +203,7 @@ public class TasksEspressoTest {
 
         // click options button
         onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
-                actionOnItemAtPosition(0, CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+                actionOnItemAtPosition(getIndexOfLastChildOfViewWithId(R.id.recyclerViewTasks), CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
 
         // wait for menu items to appear
         SystemClock.sleep(1000);
