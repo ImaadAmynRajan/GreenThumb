@@ -4,37 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import com.google.firebase.auth.FirebaseAuth;
-import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.Query;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Map;
-
-public class HomePage extends NavigationBar implements AddTaskDialog.AddTaskDialogListener {
-    private RecyclerView taskRecyclerView;
-    private RecyclerView.Adapter taskAdapter;
-    private RecyclerView.LayoutManager taskLayoutManager;
-
-    private ArrayList<Task> tasks;
-    public static ArrayList<User> users;
-    Button logout_button;
-    FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener authStateListener;
+public class HomePage extends NavigationBar {
+    private TaskAdapter adapter;
+    private Button logout_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,22 +23,10 @@ public class HomePage extends NavigationBar implements AddTaskDialog.AddTaskDial
         setContentView(R.layout.activity_home_page);
         super.onCreateNav();
 
-        // init task list list
-        this.tasks = new ArrayList<>();
-        
-        // collect all the users and tasks we have in our database
-        getTasks();
-
         // initialize RecyclerView
-        this.taskRecyclerView = findViewById(R.id.recyclerViewUserTasks);
-        this.taskRecyclerView.setHasFixedSize(true);
+        initializeTaskList();
 
-        this.taskAdapter = new TaskAdapter(tasks);
-        this.taskLayoutManager = new LinearLayoutManager(this);
-
-        this.taskRecyclerView.setAdapter(this.taskAdapter);
-        this.taskRecyclerView.setLayoutManager(this.taskLayoutManager);
-        
+        // set on-click listener for logout button
         logout_button = findViewById(R.id.logout_button);
         logout_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,128 +34,38 @@ public class HomePage extends NavigationBar implements AddTaskDialog.AddTaskDial
                 FirebaseAuth.getInstance().signOut();
                 Intent loginPage = new Intent(HomePage.this, MainActivity.class);
                 startActivity(loginPage);
-
-            }
-        });
-
-        // click listener for the add task button
-        FloatingActionButton newTaskButton = findViewById(R.id.addTaskButton);
-        newTaskButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openNewTaskDialog();
             }
         });
     }
 
-    /**
-     * This function retrieves all the tasks from the data base.
-     * Once it takes a snapshot of the database,
-     * it  sends them to the collectTasks function where they are turned into task objects
-     * Reference: https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
-     */
-    private void getTasks() {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("tasks");
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // send our tasks to be added to our recycle viewer
-                collectTasks(dataSnapshot);
-            }
+    private void initializeTaskList() {
+        // get current user's email
+        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+        // create query for our tasks, getting only those assigned to the current user
+        Query query = FirebaseDatabase.getInstance().getReference().child("tasks")
+                .orderByChild("assigneeLabel").equalTo(currentUser);
 
-            }
-        });
-    }
+        // create options for our RecyclerView
+        FirebaseRecyclerOptions<Task> options = new FirebaseRecyclerOptions.Builder<Task>()
+                .setQuery(query, Task.class).setLifecycleOwner(this).build();
 
-    /**
-     * This method is called after we have retrieved our tasks from the database
-     * It will cycle through the tasks and create task objects out of them
-     * Reference: https://stackoverflow.com/questions/32886546/how-to-get-all-child-list-from-firebase-android
-     * @param dataSnapshot A snapshot of the tasks branch of the database
-     */
-    private void collectTasks(DataSnapshot dataSnapshot) {
-        for (DataSnapshot dp: dataSnapshot.getChildren()) {
-            Map<String, Object> info = (Map<String, Object>) dp.getValue();
-            String assigneeLabel, assigneeId;
-            Date date;
-            boolean isFinished;
+        // initialize RecyclerView
+        final RecyclerView taskList = (RecyclerView) findViewById(R.id.recyclerViewUserTasks);
+        taskList.setLayoutManager(new LinearLayoutManager(this));
 
-            // ensure that assignee label matches email of current user
-            if (info.get("assigneeLabel") != null) {
-                assigneeLabel = (String) info.get("assigneeLabel");
-                if (!assigneeLabel.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
-                    continue;
-                }
-            } else {
-                continue;
-            }
+        // create RecyclerView adapter
+        adapter = new TaskAdapter(options);
 
-            // set all our values
-            String title = (String) info.get("title");
-            String id = (String) dp.getKey();
-
-            if (info.get("dueDate") != null) {
-                date = new Date((Long) info.get("dueDate"));
-            } else {
-                date = null;
-            }
-
-            if (info.get("assigneeId") != null) {
-                assigneeId = (String) info.get("assigneeId");
-            } else {
-                assigneeId = null;
-            }
-
-            if (info.get("finished") != null) {
-                isFinished = (boolean) info.get("finished");
-            } else {
-                isFinished = false;
-            }
-
-            this.tasks.add(new Task(id, title, date, new User(assigneeId, assigneeLabel), isFinished));
-        }
-        this.taskAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
+        taskList.setAdapter(adapter);
     }
 
     /**
      * Creates and shows an instance of AddTaskDialog
      */
-    private void openNewTaskDialog() {
-        AddTaskDialog addTaskDialog = new AddTaskDialog();
+    public void openNewTaskDialog(View view) {
+        AddTaskDialog addTaskDialog = new AddTaskDialog(adapter);
         addTaskDialog.show(getSupportFragmentManager(), "add new task");
-    }
-
-    /**
-     * Adds a task to the app's database and ArrayList of tasks
-     * @param title description of the task
-     * @param dueDate date by which the task must be completed
-     * @param assignee user to which the task has been assigned
-     */
-    @Override
-    public void addTask(String title, Date dueDate, Object assignee) {
-        // get our database reference to the tasks branch
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("tasks");
-        // create a new id for the task
-        String id = db.push().getKey();
-        // create a task
-        Task newTask = new Task(id, title, dueDate, (User) assignee);
-
-        // push that task to the database
-        db.child(id).setValue(newTask);
-
-        // add task to ViewTasks screen if it is assigned to the current user
-        if (
-                newTask.getAssigneeLabel() != null &&
-                        newTask.getAssigneeLabel().equals(
-                                FirebaseAuth.getInstance().getCurrentUser().getEmail()
-                        )
-        ) {
-            this.tasks.add(0, newTask);
-            // update the screen to display the new task
-            this.taskAdapter.notifyDataSetChanged();
-        }
     }
 }
