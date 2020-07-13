@@ -3,11 +3,11 @@ package com.example.greenthumb;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -23,37 +23,50 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import androidx.databinding.DataBindingUtil;
+import com.example.greenthumb.databinding.AddTaskDialogBinding;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents the UI that users use to add new tasks.
  * Code for building a dialog in Android based on https://www.youtube.com/watch?v=ARezg1D9Zd0 (accessed 29 May, 2020)
  */
 public class AddTaskDialog extends AppCompatDialogFragment {
-    private Spinner spinnerTaskTitle;
+    private TaskAdapter adapter;
+    private AddTaskDialogBinding binding;
     private Spinner spinnerAssignee;
     private EditText editTextDatePreview;
-    private Button buttonDate;
-
-    private String taskTitle = null;
-    private Date dueDate = null;
-
     private ArrayList<User> users;
 
-    private AddTaskDialogListener listener;
+    /**
+     * Instantiates a new AddTaskDialog
+     * @param adapter the TaskAdapter for the RecyclerView in the activity that this dialog is opened in
+     */
+    public AddTaskDialog(TaskAdapter adapter) {
+        this.adapter = adapter;
+    }
 
     /**
      * Initializes AddTaskDialog. Sets onClick events.
      * @param savedInstanceState
      * @return the configured AddTaskDialog
      */
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // create a new task
+        Task task = new Task(null, TaskTitle.None, null,  null);
+
+        // configure databinding
+        binding = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.add_task_dialog, null, false);
+        binding.setTask(new TaskViewModel(task));
+        binding.setLifecycleOwner(this);
+
         // load all the users from the platform
         users = new ArrayList<>();
         getUsers();
@@ -62,6 +75,7 @@ public class AddTaskDialog extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.add_task_dialog, null);
 
+        //builder.setView(binding.getRoot())
         builder.setView(view)
                 .setTitle("New Task")
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -73,29 +87,47 @@ public class AddTaskDialog extends AppCompatDialogFragment {
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // get task title and assignee
-                        taskTitle = spinnerTaskTitle.getSelectedItem().toString();
-                        Object assignee = getAssigneeSelection();
-
-                        if (verifyInput()) {
-                            // add task to database and to ViewTasks screen
-                            listener.addTask(taskTitle, dueDate, assignee);
-                        }
+                        saveTask();
                     }
                 });
 
-        spinnerTaskTitle = view.findViewById(R.id.spinnerTaskTitle);
+        // configure event listener for task title selection
+        Spinner spinnerTaskTitle = view.findViewById(R.id.spinnerTaskTitle);
+        spinnerTaskTitle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                binding.getTask().setTitle(TaskTitle.intToTitle(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // do nothing
+            }
+        });
+
+        // configure event listener for assignee selection
         spinnerAssignee = view.findViewById(R.id.spinnerAssignee);
+        spinnerAssignee.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                binding.getTask().setAssignee(getAssigneeSelection());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // do nothing
+            }
+        });
 
         editTextDatePreview = view.findViewById(R.id.editTextDatePreview);
-        buttonDate = view.findViewById(R.id.buttonDate);
+        Button buttonDate = view.findViewById(R.id.buttonDate);
 
+        // configure event listener for due date selection
         final Calendar calendar = Calendar.getInstance();
-
         buttonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(Objects.requireNonNull(getContext()), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         // get date selection
@@ -108,7 +140,8 @@ public class AddTaskDialog extends AppCompatDialogFragment {
                         // update preview text
                         editTextDatePreview.setText(dateString);
 
-                        dueDate = new Date(year - 1900, month, dayOfMonth);
+                        Date dueDate = new Date(year - 1900, month, dayOfMonth);
+                        binding.getTask().setDueDate(dueDate.getTime());
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 /* disables selection of past dates
@@ -121,15 +154,13 @@ public class AddTaskDialog extends AppCompatDialogFragment {
         return builder.create();
     }
 
-    // onAttach method based on https://www.youtube.com/watch?v=ARezg1D9Zd0 (accessed June 7, 2020)
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        try {
-            this.listener = (AddTaskDialogListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement AddTaskDialogListener");
+    /**
+     * Saves the task to the database.
+     */
+    private void saveTask() {
+        if (verifyInput()) {
+            binding.getTask().save();
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -138,7 +169,7 @@ public class AddTaskDialog extends AppCompatDialogFragment {
      * @return a boolean indicating whether the input is valid
      */
     private boolean verifyInput() {
-        return !taskTitle.equals("Select task");
+        return binding.getTask().getTitle() != TaskTitle.None;
     }
 
     /*
@@ -151,12 +182,12 @@ public class AddTaskDialog extends AppCompatDialogFragment {
         for (int i = 0; i < users.size(); i++) {
             userLabels[i + 1] = users.get(i).getEmail();
         }
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this.getContext(), spinner, userLabels);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this.getContext(), spinner, userLabels);
         this.spinnerAssignee.setAdapter(spinnerArrayAdapter);
     }
 
     // gets User based on spinner selection
-    private Object getAssigneeSelection() {
+    private User getAssigneeSelection() {
         String assignee = this.spinnerAssignee.getSelectedItem().toString();
         // now find it in our user array
         for (User u : users) {
@@ -204,18 +235,5 @@ public class AddTaskDialog extends AppCompatDialogFragment {
         }
         // now that we have the users, load them into the spinner
         loadAssigneeOptions(R.layout.support_simple_spinner_dropdown_item);
-    }
-
-    /**
-     * Interface for activities to interact with the dialog for adding tasks
-     */
-    public interface AddTaskDialogListener {
-        /**
-         * Adds a task to the app's database and ArrayList of tasks
-         * @param title description of the task
-         * @param dueDate date by which the task must be completed
-         * @param assignee user to which the task has been assigned
-         */
-        void addTask(String title, Date dueDate, Object assignee);
     }
 }
