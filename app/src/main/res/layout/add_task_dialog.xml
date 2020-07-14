@@ -5,8 +5,8 @@
     <data>
         <variable
             name="task"
-            type="com.example.greenthumb.TaskViewModel"/>
-        <import type="com.example.greenthumb.TaskTitle"/>
+            type="com.example.greenthumb.tasks.TaskViewModel"/>
+        <import type="com.example.greenthumb.tasks.TaskTitle"/>
     </data>
     <RelativeLayout
         android:id="@+id/layout_add_task"

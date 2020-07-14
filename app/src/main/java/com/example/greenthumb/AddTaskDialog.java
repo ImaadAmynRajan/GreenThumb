@@ -17,6 +17,10 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import com.example.greenthumb.tasks.Task;
+import com.example.greenthumb.tasks.TaskAdapter;
+import com.example.greenthumb.tasks.TaskTitle;
+import com.example.greenthumb.tasks.TaskViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

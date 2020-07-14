@@ -1,5 +1,8 @@
 package com.example.greenthumb;
 
+import com.example.greenthumb.tasks.Task;
+import com.example.greenthumb.tasks.TaskTitle;
+
 import org.junit.Test;
 
 import java.util.Date;

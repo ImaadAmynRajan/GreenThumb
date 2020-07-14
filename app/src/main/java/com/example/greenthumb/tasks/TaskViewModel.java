@@ -1,8 +1,10 @@
-package com.example.greenthumb;
+package com.example.greenthumb.tasks;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import com.example.greenthumb.BR;
+import com.example.greenthumb.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
