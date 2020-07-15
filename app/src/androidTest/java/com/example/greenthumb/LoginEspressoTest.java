@@ -54,4 +54,44 @@ public class LoginEspressoTest {
         intended(hasComponent(HomePage.class.getName()));
     }
 
+    @Test
+    public void nonVerifiedEmailTest() {
+        // enter email that does has not been activated
+        onView(withId(R.id.Email))
+                .perform(click())
+                .perform(typeText("sample@email.ca"));
+        closeSoftKeyboard();
+        onView(withId(R.id.Password))
+                .perform(click())
+                .perform(typeText("SamplePassw0rd!"));
+        closeSoftKeyboard();
+
+        SystemClock.sleep(2000);
+        /* use of intended based on https://developer.android.com/training/testing/espresso/cheat-sheet
+         * https://developer.android.com/reference/androidx/test/espresso/intent/matcher/IntentMatchers#hascomponent
+         */
+        // app should still be on the login page as the email is not verified
+        intended(hasComponent(MainActivity.class.getName()));
+    }
+
+    @Test
+    public void verifiedEmailTest() {
+        // enter email that has been verified
+        onView(withId(R.id.Email))
+                .perform(click())
+                .perform(typeText("rhys.mackenzie@dal.ca"));
+        closeSoftKeyboard();
+        onView(withId(R.id.Password))
+                .perform(click())
+                .perform(typeText("@Rhys1234"));
+        closeSoftKeyboard();
+
+        SystemClock.sleep(2000);
+        /* use of intended based on https://developer.android.com/training/testing/espresso/cheat-sheet
+         * https://developer.android.com/reference/androidx/test/espresso/intent/matcher/IntentMatchers#hascomponent
+         */
+        // app should login successfully
+        intended(hasComponent(HomePage.class.getName()));
+    }
+
 }
