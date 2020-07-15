@@ -46,13 +46,27 @@ public class AddTaskDialog extends AppCompatDialogFragment {
     private Spinner spinnerAssignee;
     private EditText editTextDatePreview;
     private ArrayList<User> users;
+    private Task task;
+    private boolean editMode;
 
     /**
-     * Instantiates a new AddTaskDialog
+     * Instantiates a new AddTaskDialog in 'create' mode
      * @param adapter the TaskAdapter for the RecyclerView in the activity that this dialog is opened in
      */
     public AddTaskDialog(TaskAdapter adapter) {
         this.adapter = adapter;
+        this.task = null;
+        this.editMode = false;
+    }
+
+    /**
+     * Instantiates a new AddTaskDialog in 'edit' mode
+     * @param adapter the TaskAdapter for the RecyclerView in the activity that this dialog is opened in
+     */
+    public AddTaskDialog(TaskAdapter adapter, Task task) {
+        this.adapter = adapter;
+        this.task = task;
+        this.editMode = true;
     }
 
     /**
@@ -63,8 +77,10 @@ public class AddTaskDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // create a new task
-        Task task = new Task(null, TaskTitle.None, null,  null);
+        // if we are in create mode we must create a 'blank' task
+        if (!editMode) {
+            task = new Task(null, TaskTitle.None, null,  null);
+        }
 
         // configure databinding
         binding = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.add_task_dialog, null, false);
@@ -79,16 +95,15 @@ public class AddTaskDialog extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.add_task_dialog, null);
 
-        //builder.setView(binding.getRoot())
         builder.setView(view)
-                .setTitle("New Task")
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setTitle(this.editMode ? getString(R.string.edit_task) : getString(R.string.add_task))
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // do nothing
                     }
                 })
-                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                .setPositiveButton(this.editMode ? getString(R.string.update) : getString(R.string.add), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         saveTask();
@@ -96,7 +111,8 @@ public class AddTaskDialog extends AppCompatDialogFragment {
                 });
 
         // configure event listener for task title selection
-        Spinner spinnerTaskTitle = view.findViewById(R.id.spinnerTaskTitle);
+        final Spinner spinnerTaskTitle = view.findViewById(R.id.spinnerTaskTitle);
+        spinnerTaskTitle.setSelection(TaskTitle.titleToInt(binding.getTask().getTitle()));
         spinnerTaskTitle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -125,9 +141,21 @@ public class AddTaskDialog extends AppCompatDialogFragment {
 
         editTextDatePreview = view.findViewById(R.id.editTextDatePreview);
         Button buttonDate = view.findViewById(R.id.buttonDate);
+        final Calendar calendar = Calendar.getInstance();
+
+        // set calendar date and date preview if in edit mode
+        if (editMode && binding.getTask().getDueDate() != null) {
+            calendar.setTime(new Date(binding.getTask().getDueDate()));
+
+            // format date selection to Month Day, Year
+            DateFormat dateFormat = DateFormat.getDateInstance();
+            String dateString = dateFormat.format(calendar.getTime());
+
+            // update preview text
+            editTextDatePreview.setText(dateString);
+        }
 
         // configure event listener for due date selection
-        final Calendar calendar = Calendar.getInstance();
         buttonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,6 +216,7 @@ public class AddTaskDialog extends AppCompatDialogFragment {
         }
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this.getContext(), spinner, userLabels);
         this.spinnerAssignee.setAdapter(spinnerArrayAdapter);
+        this.spinnerAssignee.setSelection(getAssigneeSelectionIndex());
     }
 
     // gets User based on spinner selection
@@ -200,6 +229,24 @@ public class AddTaskDialog extends AppCompatDialogFragment {
             }
         }
         return null;
+    }
+
+    /**
+     * Gets the index of the currently selected user in the 'users' ArrayList
+     * @return the index of the currently selected user in the 'users' ArrayList
+     */
+    private int getAssigneeSelectionIndex() {
+        if (binding.getTask().getAssigneeLabel() == null) {
+            return 0;
+        }
+
+        for (int i = 0; i < users.size(); ++i) {
+            if (users.get(i).getEmail().equals(binding.getTask().getAssigneeLabel())) {
+                return i + 1;
+            }
+        }
+
+        return 0;
     }
 
     /**
