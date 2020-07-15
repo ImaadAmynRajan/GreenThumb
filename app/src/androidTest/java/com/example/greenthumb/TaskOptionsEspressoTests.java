@@ -81,6 +81,7 @@ public class TaskOptionsEspressoTests {
         SystemClock.sleep(1000);
 
         // assert options are visible and enabled
+        onView(withText(R.string.edit)).check(matches(allOf(isEnabled(), isDisplayed())));
         onView(withText(R.string.claim)).check(matches(allOf(isEnabled(), isDisplayed())));
         onView(withText(R.string.mark_as_done)).check(matches(allOf(isEnabled(), isDisplayed())));
 
@@ -115,6 +116,9 @@ public class TaskOptionsEspressoTests {
 
         // assert Claim button is disabled
         onView(withText(R.string.claim)).check(matches(not(isClickable())));
+
+        // assert Edit button is disabled
+        onView(withText(R.string.edit)).check(matches(not(isClickable())));
 
         // click Mark As Done button
         onView(withText(R.string.mark_as_done)).perform(click());
