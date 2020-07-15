@@ -111,7 +111,7 @@ public class AddTaskDialog extends AppCompatDialogFragment {
                 });
 
         // configure event listener for task title selection
-        final Spinner spinnerTaskTitle = view.findViewById(R.id.spinnerTaskTitle);
+        Spinner spinnerTaskTitle = view.findViewById(R.id.spinnerTaskTitle);
         spinnerTaskTitle.setSelection(TaskTitle.titleToInt(binding.getTask().getTitle()));
         spinnerTaskTitle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
