@@ -46,7 +46,9 @@ public class LoginEspressoTest {
                 .perform(typeText("SamplePassw0rd!"));
         closeSoftKeyboard();
         onView(withId(R.id.login_button))
+                .perform(click())
                 .perform(click());
+
         SystemClock.sleep(2000);
         /* use of intended based on https://developer.android.com/training/testing/espresso/cheat-sheet
          * https://developer.android.com/reference/androidx/test/espresso/intent/matcher/IntentMatchers#hascomponent

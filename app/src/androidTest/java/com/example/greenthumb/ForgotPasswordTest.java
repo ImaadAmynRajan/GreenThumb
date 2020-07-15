@@ -40,7 +40,9 @@ public class ForgotPasswordTest {
                 .perform(typeText("imj@dal.ca"));
 
         onView(withId(R.id.resetEmail))
+                .perform(click())
                 .perform(click());
+
         SystemClock.sleep(2000);
 
         intended(hasComponent(MainActivity.class.getName()));

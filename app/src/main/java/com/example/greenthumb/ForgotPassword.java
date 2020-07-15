@@ -34,41 +34,46 @@ public class ForgotPassword extends AppCompatActivity {
         editTextResetEmailAddress2 = findViewById(R.id.editTextResetEmailAddress2);
         // this is reset email button's onclick listener. it checks if the email is associated with existing users. if the it is not or email is in bad format respective error is displayed to user.
 
-        resetEmail.setOnClickListener(new View.OnClickListener() {
-            /***
-             * This method starts firebase communication to reset user password
-             * @param v
-             */
-            @Override
-            public void onClick(View v) {
-                String email = editTextResetEmailAddress2.getText().toString();
-                if (email.isEmpty()) {
-                    Toast.makeText(ForgotPassword.this, "please enter email address", Toast.LENGTH_LONG).show();
+    }
 
-                } else if (!(editTextResetEmailAddress2.getText().toString().isEmpty())) {
-                    //this is where the app is communicating with firebase to confirm user's email's existence in the app.
-                    mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        /***
-                         *This method displays the result of communication with firebase.
-                         * @param task
-                         */
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(ForgotPassword.this, " password reset email is sent", Toast.LENGTH_LONG).show();
-                                Intent backToHomePage = new Intent(ForgotPassword.this, MainActivity.class);
-                                startActivity(backToHomePage);
-                            } else {
-                                Toast.makeText(ForgotPassword.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
+    public void forgotListener(View forgotView) {
+        if (forgotView.getId() == R.id.resetEmail) {
+            resetEmail.setOnClickListener(new View.OnClickListener() {
+                /***
+                 * This method starts firebase communication to reset user password
+                 * @param v
+                 */
+                @Override
+                public void onClick(View v) {
+                    String email = editTextResetEmailAddress2.getText().toString();
+                    if (email.isEmpty()) {
+                        Toast.makeText(ForgotPassword.this, "please enter email address", Toast.LENGTH_LONG).show();
+
+                    } else if (!(editTextResetEmailAddress2.getText().toString().isEmpty())) {
+                        //this is where the app is communicating with firebase to confirm user's email's existence in the app.
+                        mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            /***
+                             *This method displays the result of communication with firebase.
+                             * @param task
+                             */
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(ForgotPassword.this, " password reset email is sent", Toast.LENGTH_LONG).show();
+                                    Intent backToHomePage = new Intent(ForgotPassword.this, MainActivity.class);
+                                    startActivity(backToHomePage);
+                                } else {
+                                    Toast.makeText(ForgotPassword.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+
+
                 }
+            });
 
-
-            }
-        });
-
+        }
 
     }
 }
