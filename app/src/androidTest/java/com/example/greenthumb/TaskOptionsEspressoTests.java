@@ -1,6 +1,9 @@
 package com.example.greenthumb;
 
 import android.os.SystemClock;
+import android.widget.DatePicker;
+
+import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -20,10 +23,13 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 
 public class TaskOptionsEspressoTests {
@@ -170,6 +176,53 @@ public class TaskOptionsEspressoTests {
         // click options button
         onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
                 actionOnItemAtPosition(0, CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+
+        // wait for menu items to appear
+        SystemClock.sleep(1000);
+
+        // delete the task
+        onView(withText(R.string.delete)).perform(click());
+    }
+
+    @Test
+    public void testEditTask() {
+        // click options button
+        onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
+                actionOnItemAtPosition(getIndexOfLastChildOfViewWithId(R.id.recyclerViewTasks),
+                        CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+
+        // wait for menu items to appear
+        SystemClock.sleep(1000);
+
+        // click edit button
+        onView(withText(R.string.edit)).perform(click());
+
+        // select title from dropdown
+        onView(withId(R.id.spinnerTaskTitle)).perform(click());
+        onData(anything()).inRoot(RootMatchers.isPlatformPopup()).atPosition(2).perform(click());
+
+        // select date
+        onView(withId(R.id.buttonDate)).perform(click());
+        onView(withClassName(equalTo(DatePicker.class.getName()))).
+                perform(PickerActions.setDate(2030, 1, 1));
+        onView(withText("OK")).perform(click());
+
+        // submit data
+        onView(withText(R.string.update)).perform(click());
+
+        // wait
+        SystemClock.sleep(1000);
+
+        // check that the task displays the updated data
+        onView(new RecyclerViewMatcher(R.id.recyclerViewTasks).atPosition(getIndexOfLastChildOfViewWithId(R.id.recyclerViewTasks)))
+                .check(matches(allOf(hasDescendant(withText("Mow, trim and fertilize green spaces")),
+                        hasDescendant(anyOf(withText("Due date: Jan. 1, 2030"), withText("Due date: Jan 1, 2030"))),
+                        hasDescendant(withText("Assigned to: No one")))));
+
+        // click options button
+        onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
+                actionOnItemAtPosition(getIndexOfLastChildOfViewWithId(R.id.recyclerViewTasks),
+                        CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
 
         // wait for menu items to appear
         SystemClock.sleep(1000);
