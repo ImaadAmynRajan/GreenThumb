@@ -31,29 +31,6 @@ public class LoginEspressoTest {
     public ActivityScenarioRule<MainActivity> activityScenarioRule
             = new ActivityScenarioRule<>(MainActivity.class);
 
-    /*
-     * If verifyHomePageShown fails, check that the user with "sample@email.ca" exists.
-     * If user was deleted, update relevant strings and rerun the test
-     */
-    @Test
-    public void verifyHomePageShown() {
-        onView(withId(R.id.Email))
-                .perform(click())
-                .perform(typeText("sample@email.ca"));
-        closeSoftKeyboard();
-        onView(withId(R.id.Password))
-                .perform(click())
-                .perform(typeText("SamplePassw0rd!"));
-        closeSoftKeyboard();
-        onView(withId(R.id.login_button))
-                .perform(click());
-        SystemClock.sleep(2000);
-        /* use of intended based on https://developer.android.com/training/testing/espresso/cheat-sheet
-         * https://developer.android.com/reference/androidx/test/espresso/intent/matcher/IntentMatchers#hascomponent
-         */
-        intended(hasComponent(HomePage.class.getName()));
-    }
-
     @Test
     public void nonVerifiedEmailTest() {
         // enter email that does has not been activated

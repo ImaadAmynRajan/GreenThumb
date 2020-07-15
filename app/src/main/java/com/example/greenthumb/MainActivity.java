@@ -125,12 +125,19 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        setAlarm();
-                                        Toast.makeText(MainActivity.this, "successful login",
-                                                Toast.LENGTH_SHORT).show();
-                                        Intent homePage = new Intent(MainActivity.this, HomePage.class);
-                                        startActivity(homePage);
+                                        // check that the email is verified
+                                        if (mAuth.getCurrentUser().isEmailVerified()) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            setAlarm();
+                                            Toast.makeText(MainActivity.this, "Login Successful",
+                                                    Toast.LENGTH_SHORT).show();
+                                            Intent homePage = new Intent(MainActivity.this, HomePage.class);
+                                            startActivity(homePage);
+                                        } else {
+                                            // show a toast telling the user to verify their email
+                                            Toast.makeText(MainActivity.this, "Please verify your email before logging in.",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
 
                                     } else {
                                         // If sign in fails, display a message to the user.

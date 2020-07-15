@@ -72,18 +72,28 @@ public class SignUp extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
                                             // Sign in success, update UI with the signed-in user's information
-                                            FirebaseUser user = mAuth.getCurrentUser();
-                                            // add new user to our database
-                                            DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-                                            db.child("users/" + user.getUid()).setValue(new User(user.getUid(), email));
+                                            final FirebaseUser user = mAuth.getCurrentUser();
 
-                                            // create a toast that notifies the user of successful signup
-                                            Toast.makeText(SignUp.this, "successful signUp",
-                                                    Toast.LENGTH_SHORT).show();
+                                            // send email verification
+                                            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    // check that the email was sent successfully
+                                                    if (task.isSuccessful()) {
+                                                        // add new user to our database
+                                                        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+                                                        db.child("users/" + user.getUid()).setValue(new User(user.getUid(), email));
 
-                                            // launch the view task activity
-                                            Intent homePage = new Intent(SignUp.this, HomePage.class);
-                                            startActivity(homePage);
+                                                        // create a toast that notifies the user of successful signup
+                                                        Toast.makeText(SignUp.this, "Registered Successfully. Check email for verification link.",
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+
+                                            // launch the login page after signing up successfully
+                                            Intent login = new Intent(SignUp.this, MainActivity.class);
+                                            startActivity(login);
                                         } else {
                                             Toast.makeText(SignUp.this, Objects.requireNonNull(task.getException()).getMessage(),
                                                     Toast.LENGTH_SHORT).show();
