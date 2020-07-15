@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                                             startActivity(homePage);
                                         } else {
                                             // show a toast telling the user to verify their email
-                                            Toast.makeText(MainActivity.this, "Please verify your email before logging in.",
+                                            Toast.makeText(MainActivity.this, R.string.non_verified_toast,
                                                     Toast.LENGTH_SHORT).show();
                                         }
 

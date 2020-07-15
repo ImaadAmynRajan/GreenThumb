@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Green Thumb</string>
     <string name="tasks">Tasks</string>
+    <string name="non_verified_toast">Please verify your email before logging in.</string>
+    <string name="verification_sent">Registered Successfully. Check email for verification link.</string>
 
     <!-- Task titles -->
     <string-array name="task_titles">

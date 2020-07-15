@@ -85,7 +85,7 @@ public class SignUp extends AppCompatActivity {
                                                         db.child("users/" + user.getUid()).setValue(new User(user.getUid(), email));
 
                                                         // create a toast that notifies the user of successful signup
-                                                        Toast.makeText(SignUp.this, "Registered Successfully. Check email for verification link.",
+                                                        Toast.makeText(SignUp.this, R.string.verification_sent,
                                                                 Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
