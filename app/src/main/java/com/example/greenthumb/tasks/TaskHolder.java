@@ -54,7 +54,7 @@ public class TaskHolder extends RecyclerView.ViewHolder {
      * @param dateString the due date of the associated task
      */
     public void setDueDate(String dateString) {
-        this.dueDate.setText("Due date: " + (dateString == null ? "None" : dateString));
+        this.dueDate.setText(String.format("Due date: %s", dateString == null ? "None" : dateString));
     }
 
     /**
@@ -62,7 +62,7 @@ public class TaskHolder extends RecyclerView.ViewHolder {
      * @param assigneeLabel the email of the user assigned to the associated task
      */
     public void setAssignee(String assigneeLabel) {
-        this.assignee.setText("Assigned to: " + (assigneeLabel == null ? "No one" :assigneeLabel));
+        this.assignee.setText(String.format("Assigned to: %s", assigneeLabel == null ? "No one" : assigneeLabel));
     }
 
     /**
