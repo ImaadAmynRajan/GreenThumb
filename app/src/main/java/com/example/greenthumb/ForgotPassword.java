@@ -38,13 +38,10 @@ public class ForgotPassword extends AppCompatActivity {
 
     public void forgotListener(View forgotView) {
         if (forgotView.getId() == R.id.resetEmail) {
-            resetEmail.setOnClickListener(new View.OnClickListener() {
                 /***
                  * This method starts firebase communication to reset user password
-                 * @param v
+                 *
                  */
-                @Override
-                public void onClick(View v) {
                     String email = editTextResetEmailAddress2.getText().toString();
                     if (email.isEmpty()) {
                         Toast.makeText(ForgotPassword.this, "please enter email address", Toast.LENGTH_LONG).show();
@@ -68,10 +65,6 @@ public class ForgotPassword extends AppCompatActivity {
                             }
                         });
                     }
-
-
-                }
-            });
 
         }
 

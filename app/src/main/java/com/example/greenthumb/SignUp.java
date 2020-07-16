@@ -52,16 +52,12 @@ public class SignUp extends AppCompatActivity {
     public void signUpListner(View signUpView) {
         if (signUpView.getId() == R.id.signUp_button) {
             // this is onclick listener with method to create user in firebase
-            signUp_button.setOnClickListener(new View.OnClickListener() {
                 // this method checks if the user is already existing or not, where user is not already existing and email is in correct format a user is created.
-
                 /***
                  * This method starts Firebase communication by taking in user email and password.
                  * if the email and password are not empty and in valid format account is created in firebase authentication system.
                  * @param v
                  */
-                @Override
-                public void onClick(View v) {
                     final String email = signUpEmail.getText().toString();
                     String password = signUpPassword.getText().toString();
                     passwordValidator pv = new passwordValidator(password);
@@ -110,21 +106,16 @@ public class SignUp extends AppCompatActivity {
 
 
                 }
-            });
-        } else if (signUpView.getId() == R.id.login_TextView) {
+
+        else if (signUpView.getId() == R.id.login_TextView) {
             // this is onclick listener for taking user to login page
-            login_TextView.setOnClickListener(new View.OnClickListener() {
                 /***
                  * This method takes user to login page.
                  * @param v
                  */
-                @Override
-                public void onClick(View v) {
                     Intent login_Page = new Intent(SignUp.this, MainActivity.class);
                     startActivity(login_Page);
                 }
-            });
-        }
 
 
     }

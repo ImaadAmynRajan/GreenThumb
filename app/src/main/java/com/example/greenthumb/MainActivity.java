@@ -118,15 +118,12 @@ public class MainActivity extends AppCompatActivity {
         signUp_textView = findViewById(R.id.signUp_textView);
         forgot_password_TextView = findViewById(R.id.forgot_password_TextView);
         if (mainActivityView.getId() == R.id.login_button) {
-            login_button.setOnClickListener(new View.OnClickListener() {
                 /***
                  *This onclick method takes in the user input data from email and password fields. if the fields were not empty the data of those fields would be checked against the firebase Authentication system
                  * that checks the user credentials. once credentials are found and verified the user is given access to home screen
                  * @param v
                  *
                  */
-                @Override
-                public void onClick(View v) {
                     final String user_Email = email.getText().toString();
                     String user_Password = password.getText().toString();
                     if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
@@ -161,37 +158,28 @@ public class MainActivity extends AppCompatActivity {
                                 });
                     }
                 }
-            });
-        } else if (mainActivityView.getId() == R.id.signUp_textView) {
+
+         else if (mainActivityView.getId() == R.id.signUp_textView) {
             // this is onclick listener for taking user to signUp page
-            signUp_textView.setOnClickListener(new View.OnClickListener() {
                 /***
                  * This method takes user to sign up page were they can create an account.
                  * @param v
                  */
-                @Override
-                public void onClick(View v) {
                     Intent signUp = new Intent(MainActivity.this, SignUp.class);
                     startActivity(signUp);
-
                 }
-            });
 
-        } else if (mainActivityView.getId() == R.id.forgot_password_TextView) {
-
+         else if (mainActivityView.getId() == R.id.forgot_password_TextView) {
             // this is onclick listener for taking user to forgot password page.
-            forgot_password_TextView.setOnClickListener(new View.OnClickListener() {
                 /***
                  * This method takes user to forgot password page of the app where they can reset their password
                  * @param v
                  */
-                @Override
-                public void onClick(View v) {
                     Intent forgotPassword = new Intent(MainActivity.this, ForgotPassword.class);
                     startActivity(forgotPassword);
 
-                }
-            });
+
+
 
         }
 
