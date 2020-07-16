@@ -34,4 +34,20 @@
     <string name="cancel">Cancel</string>
 
     <string name="myTasks">My Tasks</string>
+    <string name="title">Title</string>
+    <string name="due_date">Due Date</string>
+    <string name="assignee">Assignee</string>
+    <string name="done">Done</string>
+    <string name="overdue">Overdue</string>
+
+    <!-- login/sign up strings -->
+    <string name="login">login</string>
+    <string name="logout">Logout</string>
+    <string name="sign_up">sign up</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="reset_email">Reset Email</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="already_have_an_account_prompt">Already have an account? Login</string>
 </resources>

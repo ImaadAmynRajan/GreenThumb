@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:textStyle="bold"
-            android:text="Title" />
+            android:text="@string/title" />
 
         <TextView
             android:id="@+id/textViewTaskDueDate"
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/textViewTaskTitle"
             android:padding="4dp"
-            android:text="Due Date" />
+            android:text="@string/due_date" />
 
         <TextView
             android:id="@+id/textViewTaskAssignee"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/textViewTaskDueDate"
             android:padding="4dp"
-            android:text="Assignee" />
+            android:text="@string/assignee" />
 
         <!-- code from https://stackoverflow.com/questions/31765395/whats-the-name-of-the-little-widget-with-three-dots-inside-a-cardview-in-androi (accessed June 25, 2020) -->
         <ImageButton
@@ -68,7 +68,7 @@
             android:layout_toLeftOf="@id/checkmark"
             android:padding="4dp"
             android:visibility="invisible"
-            android:text="Done" />
+            android:text="@string/done" />
 
         <TextView
             android:id="@+id/textViewOverdue"
@@ -78,7 +78,7 @@
             android:layout_toLeftOf="@id/overdue"
             android:padding="4dp"
             android:visibility="invisible"
-            android:text="Overdue" />
+            android:text="@string/overdue" />
 
     </RelativeLayout>
 
