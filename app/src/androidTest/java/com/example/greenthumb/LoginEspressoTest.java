@@ -46,7 +46,6 @@ public class LoginEspressoTest {
                 .perform(typeText("SamplePassw0rd!"));
         closeSoftKeyboard();
         onView(withId(R.id.login_button))
-                .perform(click())
                 .perform(click());
 
         SystemClock.sleep(2000);

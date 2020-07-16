@@ -105,17 +105,15 @@ public class SignUp extends AppCompatActivity {
                     }
 
 
-                }
-
-        else if (signUpView.getId() == R.id.login_TextView) {
+        } else if (signUpView.getId() == R.id.login_TextView) {
             // this is onclick listener for taking user to login page
-                /***
-                 * This method takes user to login page.
-                 * @param v
-                 */
-                    Intent login_Page = new Intent(SignUp.this, MainActivity.class);
-                    startActivity(login_Page);
-                }
+            /***
+             * This method takes user to login page.
+             * @param v
+             */
+            Intent login_Page = new Intent(SignUp.this, MainActivity.class);
+            startActivity(login_Page);
+        }
 
 
     }

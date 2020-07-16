@@ -43,7 +43,6 @@ public class SignUpEspressoTest {
                 .perform(typeText("NewP@55word"));
         closeSoftKeyboard();
         onView(withId(R.id.signUp_button))
-                .perform(click())
                 .perform(click());
         SystemClock.sleep(2000);
         intended(hasComponent(HomePage.class.getName()));
