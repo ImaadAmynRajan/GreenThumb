@@ -29,6 +29,7 @@ public class TaskViewModel extends BaseObservable {
     }
 
     @Bindable
+    public Long getDueDate() { return task.getDueDate(); }
     public void setDueDate(Long dueDate) {
         task.setDueDate(dueDate);
         notifyPropertyChanged(BR.dueDate);
@@ -44,6 +45,9 @@ public class TaskViewModel extends BaseObservable {
         notifyPropertyChanged(BR.assigneeId);
         notifyPropertyChanged(BR.assigneeLabel);
     }
+
+    @Bindable
+    public boolean isClaimed() { return task.isClaimed(); }
 
     @Bindable
     public boolean isFinished() { return task.isFinished(); }
@@ -84,6 +88,11 @@ public class TaskViewModel extends BaseObservable {
 
         // set task's assignee as current user
         setAssignee(user);
+
+        // mark task as claimed
+        task.markAsClaimed();
+        notifyPropertyChanged(BR.claimed);
+
         save();
     }
 

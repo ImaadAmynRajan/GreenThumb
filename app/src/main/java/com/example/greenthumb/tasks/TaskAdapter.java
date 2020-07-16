@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 
+import androidx.fragment.app.FragmentActivity;
+
+import com.example.greenthumb.AddTaskDialog;
 import com.example.greenthumb.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -16,9 +19,11 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
  */
 public class TaskAdapter extends FirebaseRecyclerAdapter<Task, TaskHolder> {
     private Context context = null;
+    private TaskAdapter adapter; // need to store self to pass to new AddTaskDialog in onClickListener
 
     public TaskAdapter(FirebaseRecyclerOptions<Task> options) {
         super(options);
+        adapter = this;
     }
 
     @Override
@@ -31,7 +36,7 @@ public class TaskAdapter extends FirebaseRecyclerAdapter<Task, TaskHolder> {
     }
 
     @Override
-    protected void onBindViewHolder(final TaskHolder holder, int position, Task model) {
+    protected void onBindViewHolder(final TaskHolder holder, int position, final Task model) {
         // store associated task
         final TaskViewModel task = new TaskViewModel(model);
 
@@ -52,8 +57,11 @@ public class TaskAdapter extends FirebaseRecyclerAdapter<Task, TaskHolder> {
                 popupMenu.getMenuInflater().inflate(R.menu.task_options, popupMenu.getMenu());
 
                 // enable/disable menu options
+                MenuItem editButton = popupMenu.getMenu().findItem(R.id.editButton);
+                editButton.setEnabled(!task.isClaimed());
+
                 MenuItem claimButton = popupMenu.getMenu().findItem(R.id.claimButton);
-                claimButton.setEnabled(task.getAssigneeId() == null);
+                claimButton.setEnabled(!task.isClaimed());
 
                 MenuItem doneButton = popupMenu.getMenu().findItem(R.id.doneButton);
                 doneButton.setEnabled(!task.isFinished());
@@ -63,10 +71,17 @@ public class TaskAdapter extends FirebaseRecyclerAdapter<Task, TaskHolder> {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
+                            case R.id.editButton:
+                                if (item.isEnabled()) {
+                                    showEditTaskDialog(model);
+                                    notifyDataSetChanged();
+                                }
+                                break;
                             case R.id.claimButton:
-                                if (item.isEnabled())
+                                if (item.isEnabled()) {
                                     task.claim();
                                     notifyDataSetChanged();
+                                }
                                 break;
                             case R.id.doneButton:
                                 if (item.isEnabled()) {
@@ -89,5 +104,14 @@ public class TaskAdapter extends FirebaseRecyclerAdapter<Task, TaskHolder> {
                 popupMenu.show();
             }
         });
+    }
+
+    /**
+     * Displays the AddTask dialog in edit mode
+     * @param model
+     */
+    private void showEditTaskDialog(final Task model) {
+        AddTaskDialog editTaskDialog = new AddTaskDialog(adapter, model);
+        editTaskDialog.show(((FragmentActivity) context).getSupportFragmentManager(), "edit a task");
     }
 }
