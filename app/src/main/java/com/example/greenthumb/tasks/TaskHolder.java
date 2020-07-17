@@ -1,5 +1,6 @@
 package com.example.greenthumb.tasks;
 
+import android.content.res.Resources;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -22,6 +23,8 @@ public class TaskHolder extends RecyclerView.ViewHolder {
     private ImageView checkmark;
     private TextView overdueText;
     private ImageView clock;
+
+    Resources res = itemView.getResources();
 
     /**
      * Instantiates a new TaskHolder and gets references to all the views contained within it.
@@ -54,7 +57,7 @@ public class TaskHolder extends RecyclerView.ViewHolder {
      * @param dateString the due date of the associated task
      */
     public void setDueDate(String dateString) {
-        this.dueDate.setText(String.format("Due date: %s", dateString == null ? "None" : dateString));
+        this.dueDate.setText(String.format("%s %s", res.getString(R.string.due), dateString == null ? res.getString(R.string.none) : dateString));
     }
 
     /**
@@ -62,7 +65,7 @@ public class TaskHolder extends RecyclerView.ViewHolder {
      * @param assigneeLabel the email of the user assigned to the associated task
      */
     public void setAssignee(String assigneeLabel) {
-        this.assignee.setText(String.format("Assigned to: %s", assigneeLabel == null ? "No one" : assigneeLabel));
+        this.assignee.setText(String.format("%s %s", res.getString(R.string.assigned), assigneeLabel == null ? res.getString(R.string.no_one) : assigneeLabel));
     }
 
     /**

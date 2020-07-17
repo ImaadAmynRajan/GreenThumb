@@ -40,6 +40,12 @@
     <string name="done">Done</string>
     <string name="overdue">Overdue</string>
 
+    <!-- TaskHolder strings -->
+    <string name="due">Due date:</string>
+    <string name="none">None</string>
+    <string name="assigned">Assigned to:</string>
+    <string name="no_one">No one</string>
+
     <!-- login/sign up strings -->
     <string name="login">login</string>
     <string name="logout">Logout</string>
