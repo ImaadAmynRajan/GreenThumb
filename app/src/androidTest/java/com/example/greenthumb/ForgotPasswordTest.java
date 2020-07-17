@@ -41,6 +41,7 @@ public class ForgotPasswordTest {
 
         onView(withId(R.id.resetEmail))
                 .perform(click());
+
         SystemClock.sleep(2000);
 
         intended(hasComponent(MainActivity.class.getName()));

@@ -15,10 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -65,11 +62,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
-        email = findViewById(R.id.Email);
-        password = findViewById(R.id.Password);
-        login_button = findViewById(R.id.login_button);
-        signUp_textView = findViewById(R.id.signUp_textView);
-        forgot_password_TextView = findViewById(R.id.forgot_password_TextView);
 
         fireBase_Listener = new FirebaseAuth.AuthStateListener() {
 
@@ -189,9 +181,89 @@ public class MainActivity extends AppCompatActivity {
         Intent notifs = new Intent(this, NotificationProducer.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notifs, 0);
         // create the alarm manager that will handle activating the intent
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         // should fire once everyday
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
+
+    /****
+     * this is mainlistener method of MainActivity class that handles multiple event listeners in Login page. it is called whenever a user clicks on a Event object in the login page.
+     * @param mainActivityView: this is view object that can handle multiple listeners
+     */
+    public void mainListener(View mainActivityView) {
+        email = findViewById(R.id.Email);
+        password = findViewById(R.id.Password);
+        login_button = findViewById(R.id.login_button);
+        signUp_textView = findViewById(R.id.signUp_textView);
+        forgot_password_TextView = findViewById(R.id.forgot_password_TextView);
+        if (mainActivityView.getId() == R.id.login_button) {
+                /***
+                 *This onclick method takes in the user input data from email and password fields. if the fields were not empty the data of those fields would be checked against the firebase Authentication system
+                 * that checks the user credentials. once credentials are found and verified the user is given access to home screen
+                 * @param v
+                 *
+                 */
+                    final String user_Email = email.getText().toString();
+                    String user_Password = password.getText().toString();
+                    if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
+                        Toast.makeText(MainActivity.this, "Please enter both user email and password ", Toast.LENGTH_SHORT).show();
+                        email.requestFocusFromTouch();
+                        password.requestFocusFromTouch();
+                    } else if ((!email.getText().toString().isEmpty()) && (!password.getText().toString().isEmpty())) {
+                        mAuth.signInWithEmailAndPassword(user_Email, user_Password)
+                                .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                                    //this method will authenticate with the firebase server on user credentials.
+
+                                    /***
+                                     * This method displays the result of firebase communication where credentials were checked. if the credentials were correct the user would be allowed access.
+                                     * @param task
+                                     */
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            setAlarm();
+                                            Toast.makeText(MainActivity.this, "successful login",
+                                                    Toast.LENGTH_SHORT).show();
+                                            Intent homePage = new Intent(MainActivity.this, HomePage.class);
+                                            startActivity(homePage);
+
+                                        } else {
+                                            // If sign in fails, display a message to the user.
+                                            Toast.makeText(MainActivity.this, Objects.requireNonNull(task.getException()).getMessage(),
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    }
+                }
+
+         else if (mainActivityView.getId() == R.id.signUp_textView) {
+            // this is onclick listener for taking user to signUp page
+                /***
+                 * This method takes user to sign up page were they can create an account.
+                 * @param v
+                 */
+                    Intent signUp = new Intent(MainActivity.this, SignUp.class);
+                    startActivity(signUp);
+                }
+
+         else if (mainActivityView.getId() == R.id.forgot_password_TextView) {
+            // this is onclick listener for taking user to forgot password page.
+                /***
+                 * This method takes user to forgot password page of the app where they can reset their password
+                 * @param v
+                 */
+                    Intent forgotPassword = new Intent(MainActivity.this, ForgotPassword.class);
+                    startActivity(forgotPassword);
+
+
+
+
+        }
+
+
+    }
+
 
 }

@@ -30,14 +30,7 @@ public class HomePage extends NavigationBar {
 
         // set on-click listener for logout button
         logout_button = findViewById(R.id.logout_button);
-        logout_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent loginPage = new Intent(HomePage.this, MainActivity.class);
-                startActivity(loginPage);
-            }
-        });
+
     }
 
     private void initializeTaskList() {
@@ -53,7 +46,7 @@ public class HomePage extends NavigationBar {
                 .setQuery(query, Task.class).setLifecycleOwner(this).build();
 
         // initialize RecyclerView
-        final RecyclerView taskList = (RecyclerView) findViewById(R.id.recyclerViewUserTasks);
+        final RecyclerView taskList = findViewById(R.id.recyclerViewUserTasks);
         taskList.setLayoutManager(new LinearLayoutManager(this));
 
         // create RecyclerView adapter
@@ -70,4 +63,18 @@ public class HomePage extends NavigationBar {
         AddTaskDialog addTaskDialog = new AddTaskDialog(adapter);
         addTaskDialog.show(getSupportFragmentManager(), "add new task");
     }
-}
+    /****
+     * this is homeListener method. it handles listeners of the Home Page.
+     * @param homeView: this is event object that can handle multiple event listeners.
+     *
+     */
+    public void homeListener(View homeView) {
+        if (homeView.getId() == R.id.logout_button) {
+                    FirebaseAuth.getInstance().signOut();
+                    Intent loginPage = new Intent(HomePage.this, MainActivity.class);
+                    startActivity(loginPage);
+                }
+
+        }
+    }
+

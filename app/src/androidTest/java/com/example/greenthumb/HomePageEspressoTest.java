@@ -41,7 +41,7 @@ public class HomePageEspressoTest {
         onView(withId(R.id.Password)).perform(click()).perform(typeText(testPassword)).perform(closeSoftKeyboard());
 
         // login
-        onView(withId(R.id.login_button)).perform(click());
+        onView(withId(R.id.login_button)).perform(click()).perform(click());
 
         // wait for Home page to load
         SystemClock.sleep(2000);
@@ -66,6 +66,8 @@ public class HomePageEspressoTest {
         onView(withId(R.id.toTaskPage))
                 .perform(click());
         intended(hasComponent(ViewTasks.class.getName()));
+
+
     }
 
     @Test
@@ -85,6 +87,7 @@ public class HomePageEspressoTest {
     public void logout() {
         onView(withId(R.id.logout_button))
                 .perform(click());
+
         intended(hasComponent(MainActivity.class.getName()));
     }
 
