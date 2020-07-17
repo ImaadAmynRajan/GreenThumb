@@ -57,6 +57,7 @@ public class TaskHolder extends RecyclerView.ViewHolder {
      * @param dateString the due date of the associated task
      */
     public void setDueDate(String dateString) {
+        //code snippet based on https://stackoverflow.com/questions/52765121/how-do-i-call-getstring-inside-the-onbindviewholder-method-of-a-recycler-vie
         this.dueDate.setText(String.format("%s %s", res.getString(R.string.due), dateString == null ? res.getString(R.string.none) : dateString));
     }
 
