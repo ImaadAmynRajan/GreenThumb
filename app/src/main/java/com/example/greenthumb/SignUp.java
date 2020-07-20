@@ -41,81 +41,72 @@ public class SignUp extends AppCompatActivity {
         signUpPassword = findViewById(R.id.editTextTextPassword);
         login_TextView = findViewById(R.id.login_TextView);
         signUp_button = findViewById(R.id.signUp_button);
+    }
 
-        // this is onclick listener with method to create user in firebase
-        signUp_button.setOnClickListener(new View.OnClickListener() {
-            // this method checks if the user is already existing or not, where user is not already existing and email is in correct format a user is created.
+    // this is onclick listener with method to create user in firebase
+    public void signUpListener(View v) {
+        final String email = signUpEmail.getText().toString();
+        String password = signUpPassword.getText().toString();
+        passwordValidator pv = new passwordValidator(password);
+        if (email.isEmpty() || password.isEmpty()) {
+            Log.d(null, "signUpWithEmail:please enter both email and password");
 
-            /***
-             * This method starts Firebase communication by taking in user email and password.
-             * if the email and password are not empty and in valid format account is created in firebase authentication system.
-             * @param v
-             */
-            @Override
-            public void onClick(View v) {
-                final String email = signUpEmail.getText().toString();
-                String password = signUpPassword.getText().toString();
-                passwordValidator pv = new passwordValidator(password);
-                if (email.isEmpty() || password.isEmpty()) {
-                    Log.d(null, "signUpWithEmail:please enter both email and password");
+        } else if (!(signUpEmail.getText().toString().isEmpty()) && !(signUpPassword.getText().toString().isEmpty())) {
+            if (pv.validate()) {
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
+                            /***
+                             * This method displays result of the firebase communication to the user. when user is successfully signed up they are displayed home screen,
+                             * otherwise they are displayed what is the error like email already existing.
+                             * @param task: contains result of authentication from firebase.
+                             */
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    final FirebaseUser user = mAuth.getCurrentUser();
 
-                } else if (!(signUpEmail.getText().toString().isEmpty()) && !(signUpPassword.getText().toString().isEmpty())) {
-                    if (pv.validate()) {
-                        mAuth.createUserWithEmailAndPassword(email, password)
-                                .addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
-                                    /***
-                                     * This method displays result of the firebase communication to the user. when user is successfully signed up they are displayed home screen,
-                                     * otherwise they are displayed what is the error like email already existing.
-                                     * @param task: contains result of authentication from firebase.
-                                     */
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {
-                                            // Sign in success, update UI with the signed-in user's information
-                                            FirebaseUser user = mAuth.getCurrentUser();
-                                            // add new user to our database
-                                            DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-                                            db.child("users/" + user.getUid()).setValue(new User(user.getUid(), email));
+                                    // send email verification
+                                    user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            // check that the email was sent successfully
+                                            if (task.isSuccessful()) {
+                                                // add new user to our database
+                                                DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+                                                db.child("users/" + user.getUid()).setValue(new User(user.getUid(), email));
 
-                                            // create a toast that notifies the user of successful signup
-                                            Toast.makeText(SignUp.this, "successful signUp",
-                                                    Toast.LENGTH_SHORT).show();
-
-                                            // launch the view task activity
-                                            Intent homePage = new Intent(SignUp.this, HomePage.class);
-                                            startActivity(homePage);
-                                        } else {
-                                            Toast.makeText(SignUp.this, Objects.requireNonNull(task.getException()).getMessage(),
-                                                    Toast.LENGTH_SHORT).show();
+                                                // create a toast that notifies the user of successful signup
+                                                Toast.makeText(SignUp.this, R.string.verification_sent,
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
                                         }
+                                    });
 
-                                    }
+                                    // launch the login page after signing up successfully
+                                    Intent login = new Intent(SignUp.this, MainActivity.class);
+                                    startActivity(login);
+                                } else {
+                                    Toast.makeText(SignUp.this, Objects.requireNonNull(task.getException()).getMessage(),
+                                            Toast.LENGTH_SHORT).show();
+                                }
 
-                                });
-                    } else {
-                        Toast.makeText(SignUp.this, "Invalid Password, doesn't match the requirements.", Toast.LENGTH_LONG).show();
-                    }
+                            }
 
-
-                }
-
-
+                        });
+            } else {
+                Toast.makeText(SignUp.this, "Invalid Password, doesn't match the requirements.", Toast.LENGTH_LONG).show();
             }
-        });
-        // this is onclick listener for taking user to login page
-        login_TextView.setOnClickListener(new View.OnClickListener() {
-            /***
-             * This method takes user to login page.
-             * @param v
-             */
-            @Override
-            public void onClick(View v) {
-                Intent login_Page = new Intent(SignUp.this, MainActivity.class);
-                startActivity(login_Page);
-            }
-        });
+
+
+        }
 
 
     }
+    public void loginPageListener(View v) {
+        Intent login_Page = new Intent(SignUp.this, MainActivity.class);
+        startActivity(login_Page);
+    }
+
 
 }

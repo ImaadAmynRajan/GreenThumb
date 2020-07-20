@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:onClick="mainListener"
     tools:context=".MainActivity">
 
     <EditText
@@ -18,6 +19,7 @@
         app:layout_constraintHorizontal_bias="0.587"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:onClick="mainListener"
         app:layout_constraintVertical_bias="0.088" />
 
     <EditText
@@ -32,6 +34,7 @@
         app:layout_constraintHorizontal_bias="0.576"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:onClick="mainListener"
         app:layout_constraintVertical_bias="0.196" />
 
     <Button
@@ -47,6 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Email"
+        android:onClick="mainListener"
         app:layout_constraintVertical_bias="0.378" />
 
     <TextView
@@ -60,6 +64,7 @@
         app:layout_constraintHorizontal_bias="0.745"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:onClick="mainListener"
         app:layout_constraintVertical_bias="0.3" />
 
     <TextView
@@ -73,6 +78,7 @@
         app:layout_constraintHorizontal_bias="0.051"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:onClick="mainListener"
         app:layout_constraintVertical_bias="0.086" />
 
     <TextView
@@ -100,6 +106,7 @@
         app:layout_constraintHorizontal_bias="0.264"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:onClick="mainListener"
         app:layout_constraintVertical_bias="0.3" />
 
 
