@@ -177,6 +177,9 @@ public class AddTaskDialog extends AppCompatDialogFragment {
 
                         Date dueDate = new Date(year - 1900, month, dayOfMonth);
                         binding.getTask().setDueDate(dueDate.getTime());
+
+                        // after setting a date, we want to show the option to set the task as recurring
+                        recurring.setVisibility(View.VISIBLE);
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 /* disables selection of past dates
@@ -189,6 +192,11 @@ public class AddTaskDialog extends AppCompatDialogFragment {
         // set up our interval box and checkbox
         recurringInterval = view.findViewById(R.id.recurringInterval);
         recurring = view.findViewById(R.id.recurring);
+        // the option should be hidden initially until a date is selected
+        recurring.setVisibility(View.INVISIBLE);
+        // default the interval text box to invisible
+        recurringInterval.setVisibility(View.INVISIBLE);
+        // on click listener for the checkbox (makes the interval field visible when checked)
         recurring.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,8 +207,6 @@ public class AddTaskDialog extends AppCompatDialogFragment {
                 }
             }
         });
-        // default the interval text box to invisible
-        recurringInterval.setVisibility(View.INVISIBLE);
 
         return builder.create();
     }
