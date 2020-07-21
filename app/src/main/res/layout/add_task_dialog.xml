@@ -42,5 +42,23 @@
             android:layout_below="@+id/spinnerAssignee"
             android:layout_alignParentRight="true"
             android:text="@string/set_due_date_button" />
+
+        <EditText
+            android:id="@+id/recurringInterval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editTextDatePreview"
+            android:layout_marginEnd="61dp"
+            android:layout_toStartOf="@+id/recurring"
+            android:ems="10"
+            android:inputType="number" />
+
+        <CheckBox
+            android:id="@+id/recurring"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/buttonDate"
+            android:layout_alignParentRight="true"
+            android:text="Recurring" />
     </RelativeLayout>
 </layout>

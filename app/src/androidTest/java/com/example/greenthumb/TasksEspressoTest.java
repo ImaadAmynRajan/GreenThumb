@@ -41,6 +41,7 @@ import static org.hamcrest.Matchers.not;
 public class TasksEspressoTest {
     private final String testEmail = "ben.kelly@dal.ca";
     private final String testPassword = "Test1234";
+    private final int interval = 3;
 
     @Rule
     public ActivityScenarioRule<MainActivity> activityScenarioRule
@@ -103,6 +104,30 @@ public class TasksEspressoTest {
 
         // verify preview text
         onView(withId(R.id.editTextDatePreview)).check(matches(anyOf(withText("Jan. 1, 2025"), withText("Jan 1, 2025"))));
+    }
+
+    @Test
+    public void verifyRecurringTask(){
+        onView(withId(R.id.addTaskButton))
+                .perform(click());
+
+        // select date
+        onView(withId(R.id.buttonDate)).perform(click());
+        onView(withClassName(equalTo(DatePicker.class.getName())))
+                .perform(PickerActions.setDate(2020, 11, 4));
+        onView(withText("OK")).perform(click());
+
+        // select that this task is recurring
+        onView(withId(R.id.recurring)).perform(click());
+        onView(withId(R.id.recurringInterval)).perform(click()).perform(typeText(String.valueOf(interval))).perform(closeSoftKeyboard());
+
+        // verify due date
+        onView(withId(R.id.editTextDatePreview)).check(matches(anyOf(withText("Nov. 4, 2020"), withText("Nov 4, 2020"))));
+        // verify that you can see recurrence interval
+        onView(withId(R.id.recurring))
+                .check(matches(isDisplayed()));
+        // verify that the proper recurrence interval is set
+        onView(withId(R.id.recurringInterval)).check(matches(anyOf(withText("3"), withText("3"))));
     }
 
     @Test
