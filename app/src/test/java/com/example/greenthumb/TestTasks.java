@@ -73,9 +73,9 @@ public class TestTasks {
         // initialize a task without a recurring task
         Task task = new Task("fdfd-fdfd", TaskTitle.None, new Date(3333), null);
         // should return -1 if it doesn't have a recurring interval
-        assertTrue(task.getInterval() == -1);
+        assertEquals(task.getInterval(), -1);
         task.setInterval(3);
         // should now have an interval
-        assertTrue(task.getInterval() == 3);
+        assertEquals(3, task.getInterval());
     }
 }
