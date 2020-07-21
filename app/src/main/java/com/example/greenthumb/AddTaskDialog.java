@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -45,6 +46,8 @@ public class AddTaskDialog extends AppCompatDialogFragment {
     private AddTaskDialogBinding binding;
     private Spinner spinnerAssignee;
     private EditText editTextDatePreview;
+    private EditText recurringInterval;
+    private CheckBox recurring;
     private ArrayList<User> users;
     private Task task;
     private boolean editMode;
@@ -182,6 +185,22 @@ public class AddTaskDialog extends AppCompatDialogFragment {
                 datePickerDialog.show();
             }
         });
+
+        // set up our interval box and checkbox
+        recurringInterval = view.findViewById(R.id.recurringInterval);
+        recurring = view.findViewById(R.id.recurring);
+        recurring.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (((CheckBox) v).isChecked()) {
+                    recurringInterval.setVisibility(View.VISIBLE);
+                } else {
+                    recurringInterval.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        // default the interval text box to invisible
+        recurringInterval.setVisibility(View.INVISIBLE);
 
         return builder.create();
     }
