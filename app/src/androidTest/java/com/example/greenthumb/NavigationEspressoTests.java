@@ -88,6 +88,8 @@ public class NavigationEspressoTests {
         //navigate from TradeTasks to ViewTasks
         onView(withId(R.id.toTaskPage))
                 .perform(click());
-        intended(hasComponent(ViewTasks.class.getName()));
+        //check that ViewTasks has been launched a second time
+        //code snippet from https://stackoverflow.com/questions/34448615/espresso-test-failed-wanted-to-match-1-intent-actually-matched-2-intents
+        intended(hasComponent(ViewTasks.class.getName()), Intents.times(2));
     }
 }
