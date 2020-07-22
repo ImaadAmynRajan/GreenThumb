@@ -1,12 +1,14 @@
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/toHomePage"
         android:icon="@drawable/ic_baseline_home_24"
-        android:title="Home" />
+        android:title="@string/menu_home" />
     <item
         android:id="@+id/toTaskPage"
         android:icon="@drawable/ic_baseline_assignment_24"
-        android:title="View Tasks" />
-
+        android:title="@string/menu_view" />
+    <item
+        android:id="@+id/toTradePage"
+        android:icon="@drawable/ic_baseline_swap_horizontal_circle_24"
+        android:title="@string/menu_trade"/>
 </menu>
