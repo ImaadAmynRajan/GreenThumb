@@ -29,6 +29,10 @@ public class DatabaseService extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        // if we aren't signed in, we don't want to do anything
+        if (FirebaseAuth.getInstance().getUid() == null) {
+            return;
+        }
         this.context = context;
         // retrieve tasks, then the function will check for overdue tasks or recurring tasks
         getTasks();
@@ -88,6 +92,7 @@ public class DatabaseService extends BroadcastReceiver {
      */
     private void checkForOverdue(Task task) {
         String userId = FirebaseAuth.getInstance().getUid();
+
         // check if the task isn't finished, and it belongs to the current user, and is overdue
         if (
                 userId.equals(task.getAssigneeId()) &&
@@ -105,6 +110,7 @@ public class DatabaseService extends BroadcastReceiver {
      */
     private void checkForRecurringTask(Task task) {
         String userId = FirebaseAuth.getInstance().getUid();
+
         // time at midnight of current day
         // referenced: https://stackoverflow.com/questions/38754490/get-current-day-in-milliseconds-in-java#:~:text=long%20time%20%3D%20System.,millisOfDay().
         Calendar cal = Calendar.getInstance();
@@ -117,7 +123,8 @@ public class DatabaseService extends BroadcastReceiver {
 
         // if the task belongs to the current user, the due date is today, and its a recurring task
         // we change the due date to the set interval
-        if (userId.equals(task.getAssigneeId()) && task.getDueDate() == curDate && task.getInterval() != -1) {
+
+        if (userId.equals(task.getAssigneeId()) && task.getDueDate() != null && task.getDueDate() == curDate && task.getInterval() != -1) {
             // 1 day in milliseconds
             long day = 1000 * 60 * 60 * 24;
             // new date sets to the current date + the interval in milliseconds (interval * day)
