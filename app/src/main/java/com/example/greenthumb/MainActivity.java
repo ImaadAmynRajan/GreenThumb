@@ -92,13 +92,13 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * This function sets an alarm that repeats
-     * It will start a service that checks for overdue tasks and sends notifications to the user if
-     * they have a overdue task
+     * It will start a service that checks for different things in the background and takes
+     * appropriate actions for certain events like overdue tasks or recurring tasks
      */
     public void setAlarm() {
         // this is the intent that we want to fire every day
-        Intent notifs = new Intent(this, NotificationProducer.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notifs, 0);
+        Intent bgService = new Intent(this, DatabaseService.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, bgService, 0);
         // create the alarm manager that will handle activating the intent
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         // should fire once everyday

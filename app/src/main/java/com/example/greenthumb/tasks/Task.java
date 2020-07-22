@@ -17,6 +17,7 @@ public class Task {
     private String assigneeLabel;
     private boolean claimed = false;
     private boolean isFinished = false;
+    private int interval = -1;
 
     public Task() { } // default constructor for databinding
 
@@ -46,6 +47,19 @@ public class Task {
     public Task(String id, TaskTitle title, Date dueDate, User user, boolean isFinished) {
         this(id, title, dueDate, user);
         this.isFinished = isFinished;
+    }
+
+    /**
+     * Creates a new Task with an interval
+     * @param id the ID associated with the task
+     * @param title description of the task
+     * @param dueDate the date by which the task must be completed
+     * @param user the user to which the task is assigned
+     * @param interval the interval in days that the task should repeat
+     */
+    public Task(String id, TaskTitle title, Date dueDate, User user, int interval) {
+        this(id, title, dueDate, user);
+        this.interval = interval;
     }
 
     /**
@@ -166,4 +180,14 @@ public class Task {
         }
         return false;
     }
+
+    /**
+     * returns the interval in days that the task should repeat. If none is set, the value is -1
+     * @return integer representing the interval in days
+     */
+    public int getInterval() {
+        return interval;
+    }
+
+    public void setInterval(int interval) { this.interval = interval; }
 }
