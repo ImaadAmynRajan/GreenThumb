@@ -59,6 +59,14 @@ public class TaskViewModel extends BaseObservable {
     @Bindable
     public boolean isOverdue() { return task.isOverdue(); }
 
+    @Bindable
+    public int getInterval() { return task.getInterval(); }
+
+    public void setInterval(int interval) {
+        task.setInterval(interval);
+        notifyPropertyChanged(BR.interval);
+    }
+
     /**
      * Saves a task in the database.
      */

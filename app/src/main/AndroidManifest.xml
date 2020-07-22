@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
 
         <receiver
-            android:name=".NotificationProducer"
+            android:name=".DatabaseService"
             android:enabled="true"
             android:exported="true" />
 

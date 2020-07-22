@@ -19,7 +19,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class NotificationProducer extends BroadcastReceiver {
+import java.util.Calendar;
+import java.util.Date;
+
+public class DatabaseService extends BroadcastReceiver {
     public static String NOTIFICATION_ID = "notification-id";
 
     private Context context;
@@ -27,7 +30,7 @@ public class NotificationProducer extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        // retrieve tasks, then the function will check for overdue tasks
+        // retrieve tasks, then the function will check for overdue tasks or recurring tasks
         getTasks();
     }
 
@@ -65,7 +68,9 @@ public class NotificationProducer extends BroadcastReceiver {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot item : dataSnapshot.getChildren()) {
-                    checkForOverdue(item.getValue(Task.class));
+                    Task task = item.getValue(Task.class);
+                    checkForOverdue(task);
+                    checkForRecurringTask(task);
                 }
             }
 
@@ -91,6 +96,38 @@ public class NotificationProducer extends BroadcastReceiver {
             // build the content of the notification on the title of the task
             String content = task.getTitle() + " is overdue!";
             sendNotification(content);
+        }
+    }
+
+    /**
+     * This will check for recurring tasks and change the due date to the interval if needed
+     * @param task current task we are checking
+     */
+    private void checkForRecurringTask(Task task) {
+        String userId = FirebaseAuth.getInstance().getUid();
+        // time at midnight of current day
+        // referenced: https://stackoverflow.com/questions/38754490/get-current-day-in-milliseconds-in-java#:~:text=long%20time%20%3D%20System.,millisOfDay().
+        Calendar cal = Calendar.getInstance();
+        int year  = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int date  = cal.get(Calendar.DATE);
+        cal.clear();
+        cal.set(year, month, date);
+        long curDate = cal.getTimeInMillis();
+
+        // if the task belongs to the current user, the due date is today, and its a recurring task
+        // we change the due date to the set interval
+        if (userId.equals(task.getAssigneeId()) && task.getDueDate() == curDate && task.getInterval() != -1) {
+            // 1 day in milliseconds
+            long day = 1000 * 60 * 60 * 24;
+            // new date sets to the current date + the interval in milliseconds (interval * day)
+            long nextDate = (new Date(task.getDueDate() + task.getInterval() * day).getTime());
+            task.setDueDate(nextDate);
+
+            // update the database
+            DatabaseReference firebaseReference = FirebaseDatabase.getInstance().getReference("tasks");
+            if (task.getId() == null) task.setId(firebaseReference.push().getKey());
+            firebaseReference.child(task.getId()).setValue(task);
         }
     }
 }

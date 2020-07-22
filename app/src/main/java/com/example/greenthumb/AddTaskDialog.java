@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -95,7 +97,7 @@ public class AddTaskDialog extends AppCompatDialogFragment {
         getUsers();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.add_task_dialog, null);
 
         builder.setView(view)
@@ -177,6 +179,9 @@ public class AddTaskDialog extends AppCompatDialogFragment {
 
                         Date dueDate = new Date(year - 1900, month, dayOfMonth);
                         binding.getTask().setDueDate(dueDate.getTime());
+
+                        // after setting a date, we want to show the option to set the task as recurring
+                        recurring.setVisibility(View.VISIBLE);
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 /* disables selection of past dates
@@ -188,7 +193,47 @@ public class AddTaskDialog extends AppCompatDialogFragment {
 
         // set up our interval box and checkbox
         recurringInterval = view.findViewById(R.id.recurringInterval);
+        recurringInterval.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // don't need to do anything, but need to override
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // don't need to do anything, but need to override
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // change the character to an integer then update the task interval
+                int interval = Integer.parseInt(s.toString());
+                if (interval > 0) {
+                    task.setInterval(interval);
+                }
+            }
+        });
+
         recurring = view.findViewById(R.id.recurring);
+
+        // the option should be hidden initially unless a date is selected
+        if (task.getDueDate() == null) {
+            recurring.setVisibility(View.INVISIBLE);
+            recurringInterval.setVisibility(View.INVISIBLE);
+        } else {
+            int interval = task.getInterval();
+            if (interval != -1) {
+                recurring.setChecked(true);
+                recurringInterval.setText(String.valueOf(interval));
+                recurringInterval.setVisibility(View.VISIBLE);
+            } else {
+                // want to hide the recurring interval
+                recurringInterval.setVisibility(View.INVISIBLE);
+            }
+            recurring.setVisibility(View.VISIBLE);
+        }
+
+        // on click listener for the checkbox (makes the interval field visible when checked)
         recurring.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,8 +244,6 @@ public class AddTaskDialog extends AppCompatDialogFragment {
                 }
             }
         });
-        // default the interval text box to invisible
-        recurringInterval.setVisibility(View.INVISIBLE);
 
         return builder.create();
     }
