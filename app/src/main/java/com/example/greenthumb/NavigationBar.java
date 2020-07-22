@@ -31,6 +31,9 @@ public class NavigationBar extends AppCompatActivity {
                         } else if (item.getItemId() == R.id.toHomePage) {
                             Intent homePage = new Intent(NavigationBar.this, HomePage.class);
                             startActivity(homePage);
+                        } else if (item.getItemId() == R.id.toTradePage) {
+                            Intent tradesPage = new Intent(NavigationBar.this, TradeTasks.class);
+                            startActivity(tradesPage);
                         }
                         return false;
                     }
