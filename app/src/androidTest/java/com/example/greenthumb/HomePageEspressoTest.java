@@ -58,16 +58,8 @@ public class HomePageEspressoTest {
                 .check(matches(isDisplayed()));
         onView(withId(R.id.toTaskPage))
                 .check(matches(isDisplayed()));
-    }
-
-    @Test
-    //check that navigation bar can take user from Home Page -> Tasks
-    public void testViewTasksPage() {
-        onView(withId(R.id.toTaskPage))
-                .perform(click());
-        intended(hasComponent(ViewTasks.class.getName()));
-
-
+        onView(withId(R.id.toTradePage))
+                .check(matches(isDisplayed()));
     }
 
     @Test

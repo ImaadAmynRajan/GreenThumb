@@ -24,7 +24,14 @@
     </string-array>
 
     <string name="title_activity_view_tasks">ViewTasks</string>
+    <string name="title_activity_home_page">HomePage</string>
+    <string name="title_activity_trade_tasks">TradeTasks</string>
     <string name="set_due_date_button">Set Due Date</string>
+
+    <!-- Navigation Bar Labels-->
+    <string name="menu_home">Home</string>
+    <string name="menu_view">View Tasks</string>
+    <string name="menu_trade">Trade Tasks</string>
 
     <string name="edit">Edit</string>
     <string name="claim">Claim</string>

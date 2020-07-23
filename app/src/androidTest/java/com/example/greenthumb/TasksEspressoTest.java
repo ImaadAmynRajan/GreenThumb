@@ -6,11 +6,9 @@ import android.widget.DatePicker;
 
 import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,11 +19,8 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -34,7 +29,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 
@@ -59,18 +53,12 @@ public class TasksEspressoTest {
         // wait for Home page to load
         SystemClock.sleep(2000);
 
-        //navigate to ViewTasks page & wait for it to lodd
+        //navigate to ViewTasks page & wait for it to load
         onView(withId(R.id.toTaskPage))
                 .perform(click());
         SystemClock.sleep(1000);
 
     }
-
-    @Before
-    public void initIntents() { Intents.init(); }
-
-    @After
-    public void releaseIntents() { Intents.release(); }
 
     // checks that the "Add Task" dialog contains four views
     @Test
@@ -198,14 +186,8 @@ public class TasksEspressoTest {
                 .check(matches(isDisplayed()));
         onView(withId(R.id.toTaskPage))
                 .check(matches(isDisplayed()));
-    }
-
-    @Test
-    //check that navigation bar can take user from Tasks -> Home Page
-    public void testReturnHome() {
-        onView(withId(R.id.toHomePage))
-                .perform(click());
-        intended(hasComponent(HomePage.class.getName()));
+        onView(withId(R.id.toTradePage))
+                .check(matches(isDisplayed()));
     }
 
     @Test

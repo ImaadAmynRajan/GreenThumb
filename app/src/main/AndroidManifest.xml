@@ -28,7 +28,10 @@
         </activity>
         <activity
             android:name=".HomePage"
-            android:label="HomePage"/>
+            android:label="@string/title_activity_home_page"/>
+        <activity
+            android:name=".TradeTasks"
+            android:label="@string/title_activity_trade_tasks"/>
     </application>
 
 </manifest>
