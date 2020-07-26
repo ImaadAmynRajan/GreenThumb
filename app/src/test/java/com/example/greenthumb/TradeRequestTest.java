@@ -5,6 +5,7 @@ import com.example.greenthumb.trade.TradeRequest;
 
 import org.junit.Test;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TradeRequestTest {
