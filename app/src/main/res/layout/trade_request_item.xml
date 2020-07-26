@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CardView code from https://www.youtube.com/watch?v=Nw9JF55LDzE (accessed June 7, 2020) -->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textViewTradeRequestTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:textStyle="bold"
+            android:text="@string/title" />
+
+        <TextView
+            android:id="@+id/textViewTradeRequestDueDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewTradeRequestTitle"
+            android:padding="4dp"
+            android:text="@string/due_date" />
+
+        <TextView
+            android:id="@+id/textViewTradeRequester"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewTradeRequestDueDate"
+            android:padding="4dp"
+            android:text="@string/requested_by" />
+
+        <ImageButton
+            android:id="@+id/tradeRequestOptions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/actionOverflowButtonStyle"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
