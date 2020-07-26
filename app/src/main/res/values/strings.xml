@@ -51,11 +51,18 @@
     <string name="done">Done</string>
     <string name="overdue">Overdue</string>
 
+    <string name="myTradeRequests">My Trade Requests</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+
     <!-- TaskHolder strings -->
     <string name="due">Due date:</string>
     <string name="none">None</string>
     <string name="assigned">Assigned to:</string>
     <string name="no_one">No one</string>
+
+    <!-- TradeRequestHolder strings -->
+    <string name="requested_by">Requested by:</string>
 
     <!-- login/sign up strings -->
     <string name="login">login</string>
