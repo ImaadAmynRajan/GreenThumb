@@ -5,55 +5,53 @@ import com.example.greenthumb.tasks.Task;
 
 
 public class TradeRequest {
-    private Task tradeTask;
-    private User requestedTradeUser;
-    private String assigneeId;
-    private String assigneeLabel;
+    private static Task tradeTask;
+    private static User requestedTradeUser;
+    private static String assigneeId;
+    private static String assigneeLabel;
 
 
     public TradeRequest() {
     }
 
     public TradeRequest(String assigneeId, User requestedTradeUser, Task tradeTask) {
-        this.assigneeId = assigneeId;
-        this.requestedTradeUser = requestedTradeUser;
-        this.tradeTask = tradeTask;
+        TradeRequest.assigneeId = assigneeId;
+        TradeRequest.requestedTradeUser = requestedTradeUser;
+        TradeRequest.tradeTask = tradeTask;
+    }
+
+    public static String getAssigneeLabel() {
+        return assigneeLabel;
+    }
+
+    public static String getAssigneeId() {
+        return assigneeId;
+    }
+
+    public static void setAssignee(User user) {
+        if (user != null) {
+            assigneeLabel = user.getEmail();
+            assigneeId = user.getId();
+        } else {
+            assigneeId = null;
+            assigneeLabel = null;
+        }
     }
 
     public Task getRequestedTask() {
-        return this.tradeTask;
+        return tradeTask;
     }
 
     public void setRequestedTask(Task tradeTask) {
-        this.tradeTask = tradeTask;
+        TradeRequest.tradeTask = tradeTask;
     }
 
     public User getRequestedTradeUser() {
-        return this.requestedTradeUser;
+        return requestedTradeUser;
     }
 
     public void setRequestedTradeUser(User requestedTradeUser) {
-        this.requestedTradeUser = requestedTradeUser;
-    }
-
-
-    public String getAssigneeLabel() {
-        return this.assigneeLabel;
-    }
-
-    public String getAssigneeId() {
-        return this.assigneeId;
-    }
-
-
-    public void setAssignee(User user) {
-        if (user != null) {
-            this.assigneeLabel = user.getEmail();
-            this.assigneeId = user.getId();
-        } else {
-            this.assigneeId = null;
-            this.assigneeLabel = null;
-        }
+        TradeRequest.requestedTradeUser = requestedTradeUser;
     }
 
 
