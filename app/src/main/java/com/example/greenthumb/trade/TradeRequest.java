@@ -7,34 +7,34 @@ import com.example.greenthumb.tasks.Task;
 public class TradeRequest {
     private static Task tradeTask;
     private static User requestedTradeUser;
-    private static String assigneeId;
-    private static String assigneeLabel;
+    private static String requesterId;
+    private static String requestedLabel;
 
 
     public TradeRequest() {
     }
 
-    public TradeRequest(String assigneeId, User requestedTradeUser, Task tradeTask) {
-        TradeRequest.assigneeId = assigneeId;
+    public TradeRequest(String requesterId, User requestedTradeUser, Task tradeTask) {
+        TradeRequest.requesterId = requesterId;
         TradeRequest.requestedTradeUser = requestedTradeUser;
         TradeRequest.tradeTask = tradeTask;
     }
 
-    public static String getAssigneeLabel() {
-        return assigneeLabel;
+    public static String getRequestedLabel() {
+        return requestedLabel;
     }
 
-    public static String getAssigneeId() {
-        return assigneeId;
+    public static String getRequesterId() {
+        return requesterId;
     }
 
-    public static void setAssignee(User user) {
+    public static void setRequester(User user) {
         if (user != null) {
-            assigneeLabel = user.getEmail();
-            assigneeId = user.getId();
+            requestedLabel = user.getEmail();
+            requesterId = user.getId();
         } else {
-            assigneeId = null;
-            assigneeLabel = null;
+            requesterId = null;
+            requestedLabel = null;
         }
     }
 
