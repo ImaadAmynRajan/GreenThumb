@@ -3,47 +3,65 @@ package com.example.greenthumb.trade;
 import com.example.greenthumb.User;
 import com.example.greenthumb.tasks.Task;
 
-
+/**
+ * Represents a request to trade a task.
+ */
 public class TradeRequest {
-    private static Task tradeTask;
-    private static User requestedTradeUser;
-    private static String requesterId;
-    private static String requestedLabel;
+    private String id;
+    private Task tradeTask;
+    private User requestedTradeUser;
 
 
+    // default constructor for databinding
     public TradeRequest() {
     }
 
-    public TradeRequest(String requesterId, User requestedTradeUser, Task tradeTask) {
-        TradeRequest.requesterId = requesterId;
-        TradeRequest.requestedTradeUser = requestedTradeUser;
-        TradeRequest.tradeTask = tradeTask;
+    /**
+     * Creates a new trade request
+     * @param id the ID associated with the trade request
+     * @param requestedTradeUser the user who requested the trade
+     * @param tradeTask the task to be traded
+     */
+    public TradeRequest(String id, User requestedTradeUser, Task tradeTask) {
+        this.id = id;
+        this.requestedTradeUser = requestedTradeUser;
+        this.tradeTask = tradeTask;
     }
 
-    public static String getRequestedLabel() {
-        return requestedLabel;
+    /**
+     * Gets the ID associated with the trade request
+     * @return the ID associated with the trade request
+     */
+    public String getId() {
+        return this.id;
     }
 
-    public static String getRequesterId() {
-        return requesterId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public static void setRequester(User user) {
-        if (user != null) {
-            requestedLabel = user.getEmail();
-            requesterId = user.getId();
-        } else {
-            requesterId = null;
-            requestedLabel = null;
-        }
+    /**
+     * Gets the user who requested the trade
+     * @return the user who requested the trade
+     */
+    public User getRequester() {
+        return this.requestedTradeUser;
     }
 
+    public void setRequester(User user) {
+        this.requestedTradeUser = user;
+    }
+
+    /**
+     * Gets the task to be traded
+     * @return the task to be traded
+     */
     public Task getRequestedTask() {
         return tradeTask;
     }
 
     public void setRequestedTask(Task tradeTask) {
-        TradeRequest.tradeTask = tradeTask;
+        this.tradeTask = tradeTask;
     }
 
     public User getRequestedTradeUser() {
@@ -51,8 +69,6 @@ public class TradeRequest {
     }
 
     public void setRequestedTradeUser(User requestedTradeUser) {
-        TradeRequest.requestedTradeUser = requestedTradeUser;
+        this.requestedTradeUser = requestedTradeUser;
     }
-
-
 }
