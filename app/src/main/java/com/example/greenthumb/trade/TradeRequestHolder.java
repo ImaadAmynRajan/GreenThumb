@@ -11,7 +11,7 @@ import com.example.greenthumb.R;
 import com.example.greenthumb.tasks.TaskTitle;
 
 /**
- * Represents a ViewHolder for tasks.
+ * Represents a ViewHolder for trade requests.
  */
 public class TradeRequestHolder extends RecyclerView.ViewHolder {
     public ImageButton options;
@@ -35,7 +35,7 @@ public class TradeRequestHolder extends RecyclerView.ViewHolder {
     }
 
     /**
-     * Sets the title field of a task in the RecyclerView.
+     * Sets the title field in the RecyclerView.
      * @param title the title of the associated task
      * @param taskTitles an array of all task titles
      */
@@ -45,7 +45,7 @@ public class TradeRequestHolder extends RecyclerView.ViewHolder {
     }
 
     /**
-     * Sets the due date field of a task in the RecyclerView.
+     * Sets the due date field in the RecyclerView.
      * @param dateString the due date of the associated task
      */
     public void setDueDate(String dateString) {
@@ -53,7 +53,7 @@ public class TradeRequestHolder extends RecyclerView.ViewHolder {
     }
 
     /**
-     * Sets the assignee field of a task in the RecyclerView.
+     * Sets the requested by field in the RecyclerView
      * @param requesterLabel the email of the user who requested the trade
      */
     public void setRequester(String requesterLabel) {

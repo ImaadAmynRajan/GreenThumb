@@ -12,7 +12,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 /**
- * Represents a custom adapter for Tasks in the RecyclerView.
+ * Represents a custom adapter for Trade Requests in the RecyclerView.
  */
 public class TradeRequestAdapter extends FirebaseRecyclerAdapter<TradeRequest, TradeRequestHolder> {
     private Context context = null;
