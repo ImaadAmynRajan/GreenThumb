@@ -9,18 +9,21 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TradeRequestTest {
-    private User user;
 
     @Test
     public void getTradeRequest() {
-        TradeRequest tradeRequest = new TradeRequest("userid", new User("userid", "email@email.com"), new Task());
-        // assert the tradeRequest doesn't have an assignee yet
-        assertTrue(TradeRequest.getRequesterId(), true);
-//        assertTrue(tradeRequest.getRequestedTask(),true);
-        // assign a user
-        tradeRequest.setRequestedTradeUser(new User("user-2-id", "email@email.com"));
-        // check that the values are updated
-        assertEquals("email@email.com", tradeRequest.getRequestedTradeUser().getEmail());
-        assertEquals("userid", TradeRequest.getRequesterId());
+        String requestId = "ABC";
+        String userId = "123";
+        String userEmail = "test@email.com";
+        User user = new User(userId, userEmail);
+        Task testTask = new Task();
+
+        // create new trade request
+        TradeRequest tradeRequest = new TradeRequest(requestId, user, testTask);
+
+        // test getters
+        assertEquals(tradeRequest.getId(), requestId);
+        assertEquals(tradeRequest.getRequester(), user);
+        assertEquals(tradeRequest.getRequestedTask(), testTask);
     }
 }

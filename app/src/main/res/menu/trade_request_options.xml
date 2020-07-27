@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- code from https://www.javatpoint.com/android-popup-menu-example#:~:text=%E2%86%92%20%E2%86%90%20prev-,Android%20Popup%20Menu%20Example,The%20android. (accessed June 25, 2020) -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/acceptButton"
+        android:title="@string/accept" />
+    <item
+        android:id="@+id/declineButton"
+        android:title="@string/decline" />
+</menu>
