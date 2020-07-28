@@ -15,7 +15,6 @@ public class Task {
     private Long dueDate;
     private String assigneeId;
     private String assigneeLabel;
-    private boolean claimed = false;
     private boolean isFinished = false;
     private int interval = -1;
 
@@ -141,14 +140,7 @@ public class Task {
      * @return a boolean value indicating whether the task has been claimed
      */
     public boolean isClaimed() {
-        return claimed;
-    }
-
-    /**
-     * Sets the task's claimed value to true
-     */
-    public void markAsClaimed() {
-        this.claimed = true;
+        return assigneeId != null;
     }
 
     /**

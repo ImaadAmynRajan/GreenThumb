@@ -97,10 +97,6 @@ public class TaskViewModel extends BaseObservable {
         // set task's assignee as current user
         setAssignee(user);
 
-        // mark task as claimed
-        task.markAsClaimed();
-        notifyPropertyChanged(BR.claimed);
-
         save();
     }
 
