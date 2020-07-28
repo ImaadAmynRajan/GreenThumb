@@ -5,6 +5,7 @@
     <string name="verification_sent">Registered Successfully. Check email for verification link.</string>
     <string name="checkbox_text">Recurring</string>
     <string name="interval_hint">Interval (days)</string>
+    <string name="trade_accepted">Trade Accepted</string>
 
     <!-- Task titles -->
     <string-array name="task_titles">

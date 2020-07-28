@@ -12,6 +12,8 @@ import com.example.greenthumb.tasks.Task;
 import com.example.greenthumb.tasks.TaskTitle;
 import com.example.greenthumb.trade.TradeRequest;
 import com.example.greenthumb.trade.TradeRequestViewModel;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -98,6 +100,36 @@ public class TradeRequestEspressoTests {
 
         // delete the trade request
         dummyTradeRequest.delete();
+    }
+
+    @Test
+    public void testTradeAccept() {
+        String requestId = "ABC";
+        String requesterId = "123";
+        String requesterEmail = "requester@email.com";
+        User requester = new User(requesterId, requesterEmail);
+        User assignee = new User("DEF", testEmail);
+        Task dummyTask = new Task("456", TaskTitle.ClearDebris, null, assignee);
+
+        // create new trade request and save it to database
+        TradeRequestViewModel dummyTradeRequest = new TradeRequestViewModel(new TradeRequest(requestId, requester, dummyTask));
+        dummyTradeRequest.save();
+
+        SystemClock.sleep(1000);
+        onView(withId(R.id.tradeRequestOptions)).perform(click());
+        // wait for menu items to appear
+        SystemClock.sleep(1000);
+
+        onView(withText(R.string.accept)).perform(click());
+
+        onView(withText(R.string.trade_accepted)).inRoot(new ToastMatcher())
+                .check(matches(isDisplayed()));
+
+        // delete the trade request
+        dummyTradeRequest.delete();
+        // delete task that was created
+        DatabaseReference firebaseReference = FirebaseDatabase.getInstance().getReference("tasks");
+        firebaseReference.child(dummyTask.getId()).removeValue();
     }
 
     /**

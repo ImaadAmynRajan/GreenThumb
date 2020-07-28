@@ -6,8 +6,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import com.example.greenthumb.R;
+import com.example.greenthumb.SignUp;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
@@ -53,7 +55,11 @@ public class TradeRequestAdapter extends FirebaseRecyclerAdapter<TradeRequest, T
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.acceptButton:
-                                    // intentionally left blank for next issue
+                                // accept the trade
+                                tradeRequest.acceptTrade();
+                                // show a toast
+                                Toast.makeText(TradeRequestAdapter.this.context, R.string.trade_accepted,
+                                        Toast.LENGTH_SHORT).show();
                                 break;
                             case R.id.declineButton:
                                     // intentionally left blank for next issue
@@ -70,4 +76,6 @@ public class TradeRequestAdapter extends FirebaseRecyclerAdapter<TradeRequest, T
             }
         });
     }
+
+
 }
