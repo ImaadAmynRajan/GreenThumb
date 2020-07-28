@@ -64,4 +64,22 @@ public class TradeRequestViewModel extends BaseObservable {
             firebaseReference.child(tradeRequest.getId()).removeValue();
         }
     }
+
+    /**
+     * Assignes the task to the requester then saves the task
+     */
+    public void acceptTrade() {
+        // get database reference tasks
+        DatabaseReference firebaseReference = FirebaseDatabase.getInstance().getReference("tasks");
+        // get the task we want to update
+        Task updatedTask = tradeRequest.getRequestedTask();
+        // update the assignee
+        updatedTask.setAssignee(getRequester());
+        // update the task in the database
+        if (updatedTask.getId() != null) {
+            firebaseReference.child(updatedTask.getId()).setValue(updatedTask);
+        }
+        // delete the trade request
+        delete();
+    }
 }

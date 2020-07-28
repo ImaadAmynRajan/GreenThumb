@@ -113,16 +113,11 @@ public class TradeRequestEspressoTests {
         TradeRequestViewModel dummyTradeRequest = new TradeRequestViewModel(new TradeRequest(requestId, requester, dummyTask));
         dummyTradeRequest.save();
 
-        // leave trades page and come back to refresh RecyclerView (not necessary when adding trade requests manually)
-        onView(withId(R.id.toHomePage))
-                .perform(click());
-        SystemClock.sleep(1000);
-        onView(withId(R.id.toTradePage))
-                .perform(click());
+        onView(withId(R.id.tradeRequestOptions)).perform(click());
+        // wait for menu items to appear
         SystemClock.sleep(1000);
 
-        onView(withId(R.id.tradeRequestOptions)).perform(click());
-        onView(withId(R.id.acceptButton)).perform(click());
+        onView(withText(R.string.accept)).perform(click());
 
         onView(withText(R.string.trade_accepted)).inRoot(new ToastMatcher())
                 .check(matches(isDisplayed()));
