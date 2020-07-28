@@ -73,7 +73,7 @@ public class TaskAdapter extends FirebaseRecyclerAdapter<Task, TaskHolder> {
                 MenuItem doneButton = popupMenu.getMenu().findItem(R.id.doneButton);
                 doneButton.setEnabled(!task.isFinished());
 
-                final MenuItem tradeButton = popupMenu.getMenu().findItem(R.id.tradeButton);
+                MenuItem tradeButton = popupMenu.getMenu().findItem(R.id.tradeButton);
                 tradeButton.setEnabled(task.getAssigneeId() != null && !task.getAssigneeLabel().equals(curUser.getEmail()));
 
                 // set event handlers for menu options

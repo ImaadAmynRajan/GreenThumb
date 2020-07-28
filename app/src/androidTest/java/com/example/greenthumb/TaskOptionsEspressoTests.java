@@ -232,24 +232,20 @@ public class TaskOptionsEspressoTests {
     }
 
     @Test
-    public void testTradeButton() {
+    public void testTradeButtonDisabled() {
         // select the task
-        onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
-                actionOnItemAtPosition(0, CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
-
-        // the task is not assigned, shouldn't be able to request a trade
-        onView(withText(R.string.trade)).check(matches(allOf(not(isEnabled()), isDisplayed())));
-
-        // click options button
         onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
                 actionOnItemAtPosition(getIndexOfLastChildOfViewWithId(R.id.recyclerViewTasks),
                         CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
-
         // wait for menu items to appear
         SystemClock.sleep(1000);
 
+        // the task is not assigned, shouldn't be able to request a trade
+        onView(withText(R.string.trade)).check(matches(allOf(not(isClickable()), isDisplayed())));
+
         // click Claim button
         onView(withText(R.string.claim)).perform(click());
+        SystemClock.sleep(1000);
 
         // click options button
         onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
@@ -257,8 +253,11 @@ public class TaskOptionsEspressoTests {
                         CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
 
         // the task is assigned to ourself, shouldn't be able to request a trade
-        onView(withText(R.string.trade)).check(matches(allOf(not(isEnabled()), isDisplayed())));
+        onView(withText(R.string.trade)).check(matches(not(isClickable())));
+    }
 
+    @Test
+    public void testTradeEnabled() {
         // create new task assigned to someone else
         onView(withId(R.id.addTaskButton))
                 .perform(click());
@@ -281,7 +280,7 @@ public class TaskOptionsEspressoTests {
                         CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
 
         // the task is not assigned to us, therefore the trade button should be enabled
-        onView(withText(R.string.trade)).check(matches(allOf(isEnabled(), isDisplayed())));
+        onView(withText(R.string.trade)).check(matches(isEnabled()));
     }
 
     /**
