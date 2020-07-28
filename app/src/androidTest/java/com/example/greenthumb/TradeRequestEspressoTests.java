@@ -100,6 +100,37 @@ public class TradeRequestEspressoTests {
         dummyTradeRequest.delete();
     }
 
+    @Test
+    public void testTradeAccept() {
+        String requestId = "ABC";
+        String requesterId = "123";
+        String requesterEmail = "requester@email.com";
+        User requester = new User(requesterId, requesterEmail);
+        User assignee = new User("DEF", testEmail);
+        Task dummyTask = new Task("456", TaskTitle.ClearDebris, null, assignee);
+
+        // create new trade request and save it to database
+        TradeRequestViewModel dummyTradeRequest = new TradeRequestViewModel(new TradeRequest(requestId, requester, dummyTask));
+        dummyTradeRequest.save();
+
+        // leave trades page and come back to refresh RecyclerView (not necessary when adding trade requests manually)
+        onView(withId(R.id.toHomePage))
+                .perform(click());
+        SystemClock.sleep(1000);
+        onView(withId(R.id.toTradePage))
+                .perform(click());
+        SystemClock.sleep(1000);
+
+        onView(withId(R.id.tradeRequestOptions)).perform(click());
+        onView(withId(R.id.acceptButton)).perform(click());
+
+        onView(withText(R.string.trade_accepted)).inRoot(new ToastMatcher())
+                .check(matches(isDisplayed()));
+
+        // delete the trade request
+        dummyTradeRequest.delete();
+    }
+
     /**
      * Returns the number of child views contained within a view
      * @param id id of the parent view
