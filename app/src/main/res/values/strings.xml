@@ -6,6 +6,7 @@
     <string name="checkbox_text">Recurring</string>
     <string name="interval_hint">Interval (days)</string>
     <string name="trade_accepted">Trade Accepted</string>
+    <string name="trade_declined">Trade Declined</string>
 
     <!-- Task titles -->
     <string-array name="task_titles">

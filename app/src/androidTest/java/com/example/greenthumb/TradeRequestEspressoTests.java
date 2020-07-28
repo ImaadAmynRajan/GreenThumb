@@ -1,11 +1,7 @@
 package com.example.greenthumb;
 
 import android.os.SystemClock;
-import android.widget.DatePicker;
 
-import androidx.test.espresso.contrib.PickerActions;
-import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import com.example.greenthumb.tasks.Task;
@@ -19,7 +15,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -27,17 +22,10 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
 
 public class TradeRequestEspressoTests {
     private final String testEmail = "ben.kelly@dal.ca";
@@ -132,8 +120,33 @@ public class TradeRequestEspressoTests {
         firebaseReference.child(dummyTask.getId()).removeValue();
     }
 
+    @Test
+    public void testTradeReject() {
+        String requestId = "ABC";
+        String requesterId = "123";
+        String requesterEmail = "requester@email.com";
+        User requester = new User(requesterId, requesterEmail);
+        User assignee = new User("DEF", testEmail);
+        Task dummyTask = new Task("456", TaskTitle.ClearDebris, null, assignee);
+
+        // create new trade request and save it to database
+        TradeRequestViewModel dummyTradeRequest = new TradeRequestViewModel(new TradeRequest(requestId, requester, dummyTask));
+        dummyTradeRequest.save();
+
+        SystemClock.sleep(1000);
+        onView(withId(R.id.tradeRequestOptions)).perform(click());
+        // wait for menu items to appear
+        SystemClock.sleep(1000);
+
+        onView(withText(R.string.decline)).perform(click());
+
+        onView(withText(R.string.trade_declined)).inRoot(new ToastMatcher())
+                .check(matches(isDisplayed()));
+    }
+
     /**
      * Returns the number of child views contained within a view
+     *
      * @param id id of the parent view
      * @return the number of child views contained within the view
      */
