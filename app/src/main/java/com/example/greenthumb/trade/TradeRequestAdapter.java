@@ -62,7 +62,10 @@ public class TradeRequestAdapter extends FirebaseRecyclerAdapter<TradeRequest, T
                                         Toast.LENGTH_SHORT).show();
                                 break;
                             case R.id.declineButton:
-                                    // intentionally left blank for next issue
+                                // reject the trade
+                                tradeRequest.delete();
+                                Toast.makeText(TradeRequestAdapter.this.context, R.string.trade_declined,
+                                        Toast.LENGTH_SHORT).show();
                                 break;
                             default:
                                 return false;
