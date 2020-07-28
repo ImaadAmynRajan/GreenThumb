@@ -60,13 +60,13 @@ public class TasksEspressoTest {
 
     }
 
-    // checks that the "Add Task" dialog contains four views
+    // checks that the "Add Task" dialog contains six views
     @Test
     public void verifyViewCount(){
         onView(withId(R.id.addTaskButton))
                 .perform(click());
 
-        onView(withId(R.id.layout_add_task)).check(matches(hasChildCount(4)));
+        onView(withId(R.id.layout_add_task)).check(matches(hasChildCount(6)));
     }
 
     // checks that the date preview is not editable
