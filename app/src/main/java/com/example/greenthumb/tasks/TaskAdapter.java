@@ -68,7 +68,7 @@ public class TaskAdapter extends FirebaseRecyclerAdapter<Task, TaskHolder> {
                 editButton.setEnabled(!task.isClaimed());
 
                 MenuItem claimButton = popupMenu.getMenu().findItem(R.id.claimButton);
-                claimButton.setEnabled(!task.isClaimed());
+                claimButton.setEnabled(task.getAssigneeId() == null);
 
                 MenuItem doneButton = popupMenu.getMenu().findItem(R.id.doneButton);
                 doneButton.setEnabled(!task.isFinished());

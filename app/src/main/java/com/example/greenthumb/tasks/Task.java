@@ -16,6 +16,7 @@ public class Task {
     private String assigneeId;
     private String assigneeLabel;
     private boolean isFinished = false;
+    private boolean claimed = false;
     private int interval = -1;
 
     public Task() { } // default constructor for databinding
@@ -140,7 +141,14 @@ public class Task {
      * @return a boolean value indicating whether the task has been claimed
      */
     public boolean isClaimed() {
-        return assigneeId != null;
+        return claimed;
+    }
+
+    /**
+     * Sets the task's claimed value to true
+     */
+    public void markAsClaimed() {
+        this.claimed = true;
     }
 
     /**
