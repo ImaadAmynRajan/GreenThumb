@@ -11,8 +11,12 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.greenthumb.AddTaskDialog;
 import com.example.greenthumb.R;
+import com.example.greenthumb.User;
+import com.example.greenthumb.trade.TradeRequest;
+import com.example.greenthumb.trade.TradeRequestViewModel;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Represents a custom adapter for Tasks in the RecyclerView.
@@ -39,6 +43,9 @@ public class TaskAdapter extends FirebaseRecyclerAdapter<Task, TaskHolder> {
     protected void onBindViewHolder(final TaskHolder holder, int position, final Task model) {
         // store associated task
         final TaskViewModel task = new TaskViewModel(model);
+        // use this so we can enable/disable the trade button
+        final User curUser = new User(FirebaseAuth.getInstance().getUid(),
+                FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
         // set text on TaskHolder
         holder.setTitle(model.getTitle(), context.getResources().getStringArray(R.array.task_titles));
@@ -61,10 +68,13 @@ public class TaskAdapter extends FirebaseRecyclerAdapter<Task, TaskHolder> {
                 editButton.setEnabled(!task.isClaimed());
 
                 MenuItem claimButton = popupMenu.getMenu().findItem(R.id.claimButton);
-                claimButton.setEnabled(!task.isClaimed());
+                claimButton.setEnabled(task.getAssigneeId() == null);
 
                 MenuItem doneButton = popupMenu.getMenu().findItem(R.id.doneButton);
                 doneButton.setEnabled(!task.isFinished());
+
+                MenuItem tradeButton = popupMenu.getMenu().findItem(R.id.tradeButton);
+                tradeButton.setEnabled(task.getAssigneeId() != null && !task.getAssigneeLabel().equals(curUser.getEmail()));
 
                 // set event handlers for menu options
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -93,6 +103,9 @@ public class TaskAdapter extends FirebaseRecyclerAdapter<Task, TaskHolder> {
                                 task.delete();
                                 notifyDataSetChanged();
                                 break;
+                            case R.id.tradeButton:
+                                TradeRequestViewModel trade = new TradeRequestViewModel(new TradeRequest(null, curUser, model));
+                                trade.save();
                             default:
                                 return false;
                         }

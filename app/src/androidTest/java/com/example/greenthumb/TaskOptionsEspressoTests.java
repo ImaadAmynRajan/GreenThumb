@@ -231,6 +231,58 @@ public class TaskOptionsEspressoTests {
         onView(withText(R.string.delete)).perform(click());
     }
 
+    @Test
+    public void testTradeButtonDisabled() {
+        // select the task
+        onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
+                actionOnItemAtPosition(getIndexOfLastChildOfViewWithId(R.id.recyclerViewTasks),
+                        CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+        // wait for menu items to appear
+        SystemClock.sleep(1000);
+
+        // the task is not assigned, shouldn't be able to request a trade
+        onView(withText(R.string.trade)).check(matches(allOf(not(isClickable()), isDisplayed())));
+
+        // click Claim button
+        onView(withText(R.string.claim)).perform(click());
+        SystemClock.sleep(1000);
+
+        // click options button
+        onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
+                actionOnItemAtPosition(getIndexOfLastChildOfViewWithId(R.id.recyclerViewTasks),
+                        CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+
+        // the task is assigned to ourself, shouldn't be able to request a trade
+        onView(withText(R.string.trade)).check(matches(not(isClickable())));
+    }
+
+    @Test
+    public void testTradeEnabled() {
+        // create new task assigned to someone else
+        onView(withId(R.id.addTaskButton))
+                .perform(click());
+
+        // select title from dropdown
+        onView(withId(R.id.spinnerTaskTitle)).perform(click());
+
+        // code snippet from https://stackoverflow.com/questions/39457305/android-testing-waited-for-the-root-of-the-view-hierarchy-to-have-window-focus
+        onData(anything()).inRoot(RootMatchers.isPlatformPopup()).atPosition(1).perform(click());
+
+        // select assignee
+        onView(withId(R.id.spinnerAssignee)).perform(click());
+        onData(anything()).inRoot(RootMatchers.isPlatformPopup()).atPosition(1).perform(click());
+        // submit data
+        onView(withText("Add")).perform(click());
+
+        // click options button
+        onView(withId(R.id.recyclerViewTasks)).perform(RecyclerViewActions.
+                actionOnItemAtPosition(getIndexOfLastChildOfViewWithId(R.id.recyclerViewTasks),
+                        CustomRecyclerViewActions.clickChildViewWithId(R.id.taskOptions)));
+
+        // the task is not assigned to us, therefore the trade button should be enabled
+        onView(withText(R.string.trade)).check(matches(isEnabled()));
+    }
+
     /**
      * Returns the number of child views contained within a view
      * @param id id of the parent view
